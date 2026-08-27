@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astranyx.dev/schemas/review-decisions-v1.json",
+  "title": "Astranyx Tester Review Decisions",
+  "type": "object",
+  "required": ["schema_version", "reviews"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "reviews": {
+      "type": "object",
+      "patternProperties": {
+        "^asx-[a-f0-9]{24}$": {
+          "type": "object",
+          "required": ["state", "note"],
+          "properties": {
+            "state": {
+              "enum": [
+                "accepted_risk", "confirmed", "needs_validation",
+                "not_tested", "rejected"
+              ]
+            },
+            "note": {"type": "string", "maxLength": 4000}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

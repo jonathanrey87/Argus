@@ -161,6 +161,8 @@ def render_finding_rows(findings):
         <strong>OWASP:</strong> {html.escape(mapping["owasp"])} |
         <strong>CVSS:</strong> {html.escape(mapping["cvss"])}
       </p>
+      <p><strong>OWASP MASVS:</strong> {html.escape(", ".join(finding.masvs) or "Unmapped")} |
+      <strong>Mapping basis:</strong> {html.escape(finding.masvs_mapping)}</p>
 
       <h4>Recommendation</h4>
       <p>{html.escape(recommendation(finding))}</p>
@@ -196,6 +198,8 @@ def write_csv(findings, output_dir):
                 "confidence",
                 "review_state",
                 "review_note",
+                "masvs",
+                "masvs_mapping",
                 "category",
                 "file",
                 "line",
@@ -214,6 +218,8 @@ def write_csv(findings, output_dir):
                         item.confidence,
                         item.review_state,
                         item.review_note,
+                        ";".join(item.masvs),
+                        item.masvs_mapping,
                         item.category,
                         item.file,
                         item.line,

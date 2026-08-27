@@ -193,6 +193,7 @@ JSON file keyed by stable finding fingerprint:
 
 ```json
 {
+  "schema_version": 1,
   "reviews": {
     "asx-example": {
       "state": "confirmed",
@@ -205,7 +206,16 @@ JSON file keyed by stable finding fingerprint:
 Allowed states are `confirmed`, `needs_validation`, `rejected`, `accepted_risk`,
 and `not_tested`. Unknown fingerprints and invalid states fail closed. The
 command reports success only after verifying every generated artifact against
-the assessment manifest.
+the assessment manifest. Every assessment also includes
+`reviews.template.json`, containing the exact fingerprints from that run. Copy
+the template outside the sealed bundle, edit the copy's states and notes, then
+pass the copy to a new assessment with `--review-file`. Editing the original
+template inside the bundle intentionally invalidates its integrity manifest.
+
+Findings include OWASP MASVS v2.1 mappings. Exact controls supplied by upstream
+evidence are marked `upstream`; conservative keyword mappings identify only a
+broad control group and are marked `inferred`. Unmapped findings remain explicit
+rather than being assigned a fabricated compliance control.
 
 ### Import a MobSF mobile assessment
 

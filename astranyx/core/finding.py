@@ -7,6 +7,8 @@ import re
 from dataclasses import dataclass, field
 from pathlib import PurePath
 
+from astranyx.mobile.masvs import infer_group
+
 FINGERPRINT_VERSION = 1
 REVIEW_STATES = {
     "accepted_risk",
@@ -50,8 +52,14 @@ class Finding:
     rule_id: str = ""
     review_state: str = "needs_validation"
     review_note: str = ""
+    masvs: list[str] = field(default_factory=list)
+    masvs_mapping: str = "unmapped"
     fingerprint: str = field(init=False)
 
     def __post_init__(self):
         identity = self.rule_id or self.category
         self.fingerprint = fingerprint(identity, self.file, self.evidence)
+        if not self.masvs:
+            self.masvs = infer_group(self.rule_id, self.category, self.reason)
+            if self.masvs:
+                self.masvs_mapping = "inferred"

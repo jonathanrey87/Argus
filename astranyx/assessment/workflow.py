@@ -31,6 +31,8 @@ def _load_reviews(path: str | Path | None) -> dict[str, dict[str, str]]:
         raise AssessmentError(f"unable to read review file: {exc}") from exc
     if not isinstance(payload, dict):
         raise AssessmentError("invalid review file: root must be an object")
+    if payload.get("schema_version") != 1:
+        raise AssessmentError("invalid review file: schema_version must be 1")
 
     reviews = payload.get("reviews")
     if not isinstance(reviews, dict):

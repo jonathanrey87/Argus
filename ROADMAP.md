@@ -16,6 +16,8 @@
 - [x] MobSF static-report import
 - [x] One-command verified mobile assessment workflow
 - [x] Fingerprint-bound tester review states
+- [x] OWASP MASVS mapping with provenance
+- [x] Sealed tester review templates
 
 ## v1.0
 - [x] Modular WordPress scanner

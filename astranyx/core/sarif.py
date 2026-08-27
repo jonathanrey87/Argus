@@ -25,6 +25,8 @@ def finding_to_result(finding):
             "astranyxReviewState": finding.review_state,
             "astranyxReviewNote": finding.review_note,
             "astranyxSource": finding.source,
+            "owaspMasvs": finding.masvs,
+            "owaspMasvsMapping": finding.masvs_mapping,
         },
         "level": level,
         "message": {"text": finding.reason or finding.note or finding.category},

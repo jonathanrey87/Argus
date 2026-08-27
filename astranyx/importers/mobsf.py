@@ -13,6 +13,7 @@ from astranyx.core.finding import Finding
 from astranyx.core.html import render
 from astranyx.core.report import Report
 from astranyx.core.sarif import export as export_sarif
+from astranyx.mobile.masvs import exact_controls
 
 MAX_REPORT_BYTES = 50 * 1024 * 1024
 MAX_TEXT = 4_000
@@ -108,6 +109,7 @@ def _finding(
         or title
     )
     normalized_evidence = _text(evidence or entry.get("component") or title)
+    masvs = exact_controls(metadata.get("masvs"))
     return Finding(
         category=title or rule_id,
         severity=severity,
@@ -120,6 +122,8 @@ def _finding(
         confidence=70,
         source="mobsf",
         rule_id=_text(rule_id),
+        masvs=masvs,
+        masvs_mapping="upstream" if masvs else "unmapped",
     )
 
 
@@ -361,6 +365,7 @@ def write_report(
         "findings.sarif",
         "index.html",
         "manifest.json",
+        "reviews.template.json",
         "style.css",
     )
     try:
@@ -379,6 +384,20 @@ def write_report(
     try:
         render(report, output_path)
         export_sarif(report, output_path)
+        review_template = {
+            "schema_version": 1,
+            "reviews": {
+                finding.fingerprint: {
+                    "state": finding.review_state,
+                    "note": finding.review_note,
+                }
+                for finding in sorted(findings, key=lambda item: item.fingerprint)
+            },
+        }
+        (output_path / "reviews.template.json").write_text(
+            json.dumps(review_template, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
         artifacts = []
         for name in artifact_names:
             artifact = output_path / name

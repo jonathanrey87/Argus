@@ -104,6 +104,7 @@ def test_import_report_writes_normalized_artifacts(tmp_path):
         "findings.json",
         "findings.sarif",
         "index.html",
+        "reviews.template.json",
         "style.css",
     }
 
@@ -158,6 +159,7 @@ def test_load_supports_current_mobsf_wrappers_and_security_sections(tmp_path):
                             "metadata": {
                                 "severity": "high",
                                 "description": "Sensitive logging",
+                                "masvs": "MASVS-STORAGE-2",
                             },
                             "files": {"src/App.java": "17,18"},
                         }
@@ -203,6 +205,8 @@ def test_load_supports_current_mobsf_wrappers_and_security_sections(tmp_path):
     code = next(item for item in findings if item.rule_id == "android_logging")
     assert code.line == 17
     assert code.evidence == "Sensitive logging"
+    assert code.masvs == ["MASVS-STORAGE-2"]
+    assert code.masvs_mapping == "upstream"
     assert metadata["imported_sections"] == [
         "binary_analysis",
         "certificate_analysis",

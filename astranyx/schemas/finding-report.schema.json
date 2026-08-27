@@ -19,7 +19,7 @@
       "required": [
         "fingerprint", "category", "severity", "file", "line",
         "evidence", "note", "confidence", "reason", "source", "rule_id",
-        "review_state", "review_note"
+        "review_state", "review_note", "masvs", "masvs_mapping"
       ],
       "properties": {
         "fingerprint": {"type": "string", "pattern": "^asx-[a-f0-9]{24}$"},
@@ -45,6 +45,15 @@
           ]
         }
         ,"review_note": {"type": "string"}
+        ,"masvs": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "^MASVS-[A-Z]+(?:-[0-9]+)?$"},
+          "uniqueItems": true
+        }
+        ,"masvs_mapping": {
+          "type": "string",
+          "enum": ["inferred", "unmapped", "upstream"]
+        }
       },
       "additionalProperties": false
     }

@@ -37,6 +37,12 @@ def test_assess_defaults_to_needs_validation_and_verifies_bundle(tmp_path):
     assert result["review_states"]["needs_validation"] == 1
     assert report["findings"][0]["review_state"] == "needs_validation"
     assert report["metadata"]["client"] == "Example Client"
+    template = json.loads((output / "reviews.template.json").read_text())
+    fingerprint = report["findings"][0]["fingerprint"]
+    assert template["reviews"][fingerprint] == {
+        "note": "",
+        "state": "needs_validation",
+    }
 
 
 def test_assess_applies_fingerprint_review_decisions(tmp_path):
@@ -49,12 +55,13 @@ def test_assess_applies_fingerprint_review_decisions(tmp_path):
     reviews.write_text(
         json.dumps(
             {
+                "schema_version": 1,
                 "reviews": {
                     fingerprint: {
                         "state": "confirmed",
                         "note": "Reproduced during authorized testing.",
                     }
-                }
+                },
             }
         )
     )
@@ -72,13 +79,19 @@ def test_assess_applies_fingerprint_review_decisions(tmp_path):
     "payload, message",
     [
         ([], "root must be an object"),
-        ({}, "reviews must be an object"),
+        ({}, "schema_version must be 1"),
         (
-            {"reviews": {"asx-unknown": {"state": "confirmed"}}},
+            {
+                "schema_version": 1,
+                "reviews": {"asx-unknown": {"state": "confirmed"}},
+            },
             "unknown finding",
         ),
         (
-            {"reviews": {"asx-unknown": {"state": "maybe"}}},
+            {
+                "schema_version": 1,
+                "reviews": {"asx-unknown": {"state": "maybe"}},
+            },
             "invalid review state",
         ),
     ],
