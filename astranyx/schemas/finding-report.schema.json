@@ -3,9 +3,10 @@
   "$id": "https://astranyx.dev/schemas/finding-report-v1.json",
   "title": "Astranyx Finding Report",
   "type": "object",
-  "required": ["schema_version", "summary", "findings"],
+  "required": ["schema_version", "metadata", "summary", "findings"],
   "properties": {
     "schema_version": {"const": 1},
+    "metadata": {"type": "object"},
     "summary": {"type": "object"},
     "findings": {
       "type": "array",

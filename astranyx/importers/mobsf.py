@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from html.parser import HTMLParser
@@ -56,8 +57,18 @@ def _text(value: Any) -> str:
     return re.sub(r"\s+", " ", rendered).strip()[:MAX_TEXT]
 
 
+def _plain_text(value: Any) -> str:
+    """Normalize user labels while preserving characters for output escaping."""
+    return re.sub(r"\s+", " ", str(value)).strip()[:MAX_TEXT]
+
+
 def _severity(value: Any) -> str | None:
     return SEVERITIES.get(_text(value).casefold())
+
+
+def _derived_rule_id(prefix: str, value: Any) -> str:
+    digest = hashlib.sha256(_text(value).casefold().encode("utf-8")).hexdigest()[:12]
+    return f"{prefix}_{digest}"
 
 
 def _line(value: Any) -> int:
@@ -116,26 +127,99 @@ def _code_findings(section: Any) -> list[Finding]:
     findings: list[Finding] = []
     if not isinstance(section, dict):
         return findings
+    if isinstance(section.get("findings"), dict):
+        section = section["findings"]
     for rule_id, entry in section.items():
         if not isinstance(entry, dict):
             continue
         files = entry.get("files")
         if isinstance(files, dict) and files:
             for file, detail in files.items():
-                detail = detail if isinstance(detail, dict) else {}
+                detail_data = detail if isinstance(detail, dict) else {}
+                metadata = entry.get("metadata")
+                metadata = metadata if isinstance(metadata, dict) else {}
                 finding = _finding(
                     rule_id=str(rule_id),
                     entry=entry,
                     file=file,
-                    evidence=detail.get("match_string")
-                    or detail.get("match_lines")
-                    or detail,
-                    line=detail.get("lines"),
+                    evidence=detail_data.get("match_string")
+                    or detail_data.get("match_lines")
+                    or metadata.get("description"),
+                    line=detail_data.get("lines") or detail,
                 )
                 if finding:
                     findings.append(finding)
         else:
             finding = _finding(rule_id=str(rule_id), entry=entry)
+            if finding:
+                findings.append(finding)
+    return findings
+
+
+def _named_list_findings(
+    section: Any, list_key: str, source_name: str
+) -> list[Finding]:
+    if not isinstance(section, dict) or not isinstance(section.get(list_key), list):
+        return []
+    findings = []
+    for index, entry in enumerate(section[list_key]):
+        if not isinstance(entry, dict):
+            continue
+        description = entry.get("description") or index
+        finding = _finding(
+            rule_id=_derived_rule_id(source_name, description),
+            entry=entry,
+            file=source_name,
+            evidence=entry.get("scope") or entry.get("description"),
+        )
+        if finding:
+            findings.append(finding)
+    return findings
+
+
+def _certificate_findings(section: Any) -> list[Finding]:
+    if not isinstance(section, dict):
+        return []
+    entries = section.get("certificate_findings")
+    if not isinstance(entries, list):
+        return []
+    findings = []
+    for index, entry in enumerate(entries):
+        if not isinstance(entry, (list, tuple)) or len(entry) < 3:
+            continue
+        severity, description, title = entry[:3]
+        finding = _finding(
+            rule_id=_derived_rule_id("certificate", title or index),
+            entry={
+                "severity": severity,
+                "description": description,
+                "title": title,
+            },
+            file="signing-certificate",
+            evidence=title,
+        )
+        if finding:
+            findings.append(finding)
+    return findings
+
+
+def _android_binary_findings(section: Any) -> list[Finding]:
+    if not isinstance(section, list):
+        return []
+    findings = []
+    for binary in section:
+        if not isinstance(binary, dict):
+            continue
+        name = binary.get("name") or "native-binary"
+        for check, entry in binary.items():
+            if check == "name" or not isinstance(entry, dict):
+                continue
+            finding = _finding(
+                rule_id=f"binary_{check}",
+                entry=entry,
+                file=name,
+                evidence=entry.get("description"),
+            )
             if finding:
                 findings.append(finding)
     return findings
@@ -187,6 +271,18 @@ def load(path: str | Path) -> tuple[dict[str, Any], list[Finding]]:
         )
     findings = _code_findings(payload.get("code_analysis"))
     findings.extend(_manifest_findings(payload.get("manifest_analysis")))
+    findings.extend(
+        _named_list_findings(
+            payload.get("network_security"), "network_findings", "network"
+        )
+    )
+    findings.extend(_certificate_findings(payload.get("certificate_analysis")))
+    binary = payload.get("binary_analysis")
+    findings.extend(
+        _code_findings(binary)
+        if isinstance(binary, dict)
+        else _android_binary_findings(binary)
+    )
     findings = list({finding.fingerprint: finding for finding in findings}.values())
     findings.sort(key=lambda item: (item.fingerprint, item.file, item.line))
     metadata = {
@@ -195,19 +291,94 @@ def load(path: str | Path) -> tuple[dict[str, Any], list[Finding]]:
         "package_name": _text(payload.get("package_name")),
         "scan_type": _text(payload.get("scan_type") or payload.get("app_type")),
         "normalized_findings": len(findings),
+        "imported_sections": sorted(
+            section
+            for section in (
+                "binary_analysis",
+                "certificate_analysis",
+                "code_analysis",
+                "manifest_analysis",
+                "network_security",
+            )
+            if section in payload
+        ),
+        "unsupported_sections": sorted(
+            section
+            for section in ("permissions", "secrets", "trackers")
+            if section in payload
+        ),
     }
     return metadata, findings
 
 
-def import_report(path: str | Path, output: str | Path) -> dict[str, Any]:
+def import_report(
+    path: str | Path,
+    output: str | Path,
+    *,
+    client: str = "",
+    consultant: str = "",
+    assessment_title: str = "",
+) -> dict[str, Any]:
     """Import MobSF JSON and render normalized Astranyx artifacts."""
     metadata, findings = load(path)
-    output_path = Path(output)
-    report = Report(
-        metadata["package_name"] or metadata["app_name"] or str(path), findings
+    metadata.update(
+        {
+            key: _plain_text(value)
+            for key, value in {
+                "client": client,
+                "consultant": consultant,
+                "assessment_title": assessment_title,
+            }.items()
+            if value
+        }
     )
-    render(report, output_path)
-    export_sarif(report, output_path)
+    output_path = Path(output)
+    artifact_names = (
+        "app.js",
+        "findings.csv",
+        "findings.json",
+        "findings.sarif",
+        "index.html",
+        "manifest.json",
+        "style.css",
+    )
+    try:
+        output_path.mkdir(parents=True, exist_ok=False)
+    except FileExistsError as exc:
+        raise MobSFImportError(
+            f"refusing to overwrite existing output directory: {output_path}"
+        ) from exc
+    report = Report(
+        metadata["package_name"] or metadata["app_name"] or str(path),
+        findings,
+        metadata=metadata,
+    )
+    try:
+        render(report, output_path)
+        export_sarif(report, output_path)
+        artifacts = []
+        for name in artifact_names:
+            artifact = output_path / name
+            if name == "manifest.json" or not artifact.is_file():
+                continue
+            content = artifact.read_bytes()
+            artifacts.append(
+                {
+                    "path": name,
+                    "size_bytes": len(content),
+                    "sha256": hashlib.sha256(content).hexdigest(),
+                }
+            )
+        with (output_path / "manifest.json").open("x", encoding="utf-8") as handle:
+            handle.write(
+                json.dumps({"schema_version": 1, "artifacts": artifacts}, indent=2)
+                + "\n"
+            )
+    except Exception:
+        for name in artifact_names:
+            (output_path / name).unlink(missing_ok=True)
+        output_path.rmdir()
+        raise
     return {
         **metadata,
         "findings_imported": len(findings),

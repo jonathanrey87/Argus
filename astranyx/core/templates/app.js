@@ -19,27 +19,3 @@ function filterRows() {
     }
   });
 }
-
-new Chart(document.getElementById("confidenceChart"), {
-  type: "doughnut",
-  data: {
-    labels: ["High", "Medium", "Low"],
-    datasets: [{
-      data: [HIGH, MEDIUM, LOW]
-    }]
-  }
-});
-
-new Chart(document.getElementById("categoryChart"), {
-  type: "bar",
-  data: {
-    labels: CATEGORY_LABELS,
-    datasets: [{
-      label: "Findings",
-      data: CATEGORY_VALUES
-    }]
-  },
-  options: {
-    indexAxis: "y"
-  }
-});

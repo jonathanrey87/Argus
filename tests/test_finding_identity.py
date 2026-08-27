@@ -52,5 +52,6 @@ def test_report_declares_schema_and_fingerprint():
     )
 
     assert payload["schema_version"] == 1
+    assert payload["metadata"] == {}
     assert payload["findings"][0]["fingerprint"].startswith("asx-")
     assert schema["properties"]["schema_version"]["const"] == 1

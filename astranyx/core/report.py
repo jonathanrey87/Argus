@@ -10,6 +10,7 @@ REPORT_SCHEMA_VERSION = 1
 class Report:
     target: str
     findings: list
+    metadata: dict = field(default_factory=dict)
     generated: str = field(
         default_factory=lambda: datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S")
     )
@@ -35,6 +36,7 @@ class Report:
         return json.dumps(
             {
                 "schema_version": REPORT_SCHEMA_VERSION,
+                "metadata": self.metadata,
                 "summary": self.summary(),
                 "findings": [vars(f) for f in self.findings],
             },

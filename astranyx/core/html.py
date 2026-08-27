@@ -86,6 +86,44 @@ def render_surface_rows(attack_surface):
     return rows
 
 
+def render_metadata(metadata):
+    labels = {
+        "app_name": "Application",
+        "package_name": "Package / Bundle ID",
+        "scan_type": "Artifact type",
+        "client": "Client",
+        "consultant": "Consultant",
+        "source": "Evidence source",
+    }
+    rows = []
+    for key, label in labels.items():
+        value = metadata.get(key)
+        if value:
+            rows.append(
+                f"<tr><th>{html.escape(label)}</th>"
+                f"<td>{html.escape(str(value))}</td></tr>"
+            )
+    return "".join(rows) or '<tr><td colspan="2">Not supplied.</td></tr>'
+
+
+def executive_summary(findings):
+    critical = sum(1 for item in findings if item.severity.casefold() == "critical")
+    high = sum(1 for item in findings if item.severity.casefold() == "high")
+    if critical:
+        posture = "Immediate remediation is recommended before release."
+    elif high:
+        posture = "High-severity issues should be addressed before release."
+    elif findings:
+        posture = "The assessment identified issues requiring engineering review."
+    else:
+        posture = "No reportable findings were imported from the supplied evidence."
+    return (
+        f"Astranyx evaluated {len(findings)} normalized, evidence-backed findings. "
+        f"{posture} Scanner output should be independently validated before a "
+        "security or compliance decision is made."
+    )
+
+
 def render_finding_rows(findings):
     rows = ""
 
@@ -115,6 +153,9 @@ def render_finding_rows(findings):
 
       <h4>Classification</h4>
       <p>
+        <strong>ID:</strong> {html.escape(finding.fingerprint)} |
+        <strong>Source:</strong> {html.escape(finding.source)} |
+        <strong>Rule:</strong> {html.escape(finding.rule_id or "n/a")}<br>
         <strong>CWE:</strong> {html.escape(mapping["cwe"])} |
         <strong>OWASP:</strong> {html.escape(mapping["owasp"])} |
         <strong>CVSS:</strong> {html.escape(mapping["cvss"])}
@@ -198,12 +239,21 @@ def render(report, output_dir):
 
     category_labels = list(summary["categories"].keys())
     category_values = list(summary["categories"].values())
+    severity_counts = {
+        level: sum(1 for finding in findings if finding.severity.casefold() == level)
+        for level in ("critical", "high", "medium", "low", "info")
+    }
 
     page = load_template("dashboard.html")
 
     replacements = {
         "{{TARGET}}": html.escape(summary["target"]),
         "{{GENERATED}}": html.escape(summary["generated"]),
+        "{{ASSESSMENT_TITLE}}": html.escape(
+            str(report.metadata.get("assessment_title") or "Mobile Security Assessment")
+        ),
+        "{{EXECUTIVE_SUMMARY}}": html.escape(executive_summary(findings)),
+        "{{METADATA_ROWS}}": render_metadata(report.metadata),
         "{{OVERALL_RISK_SCORE}}": str(overall_risk_score),
         "{{RISK_RATING}}": html.escape(risk_rating),
         "{{RISK_BAR}}": risk_bar,
@@ -212,10 +262,16 @@ def render(report, output_dir):
         "{{HIGH}}": str(high),
         "{{MEDIUM}}": str(medium),
         "{{LOW}}": str(low),
+        "{{CRITICAL_SEVERITY}}": str(severity_counts["critical"]),
+        "{{HIGH_SEVERITY}}": str(severity_counts["high"]),
+        "{{MEDIUM_SEVERITY}}": str(severity_counts["medium"]),
+        "{{LOW_SEVERITY}}": str(severity_counts["low"]),
+        "{{INFO_SEVERITY}}": str(severity_counts["info"]),
         "{{SURFACE_ROWS}}": render_surface_rows(attack_surface),
         "{{FINDING_ROWS}}": render_finding_rows(findings),
         "{{CATEGORY_LABELS}}": json.dumps(category_labels),
         "{{CATEGORY_VALUES}}": json.dumps(category_values),
+        "{{CATEGORY_COUNT}}": str(len(category_labels)),
     }
 
     for key, value in replacements.items():

@@ -57,6 +57,8 @@ def test_load_normalizes_high_signal_mobsf_findings(tmp_path):
         "package_name": "com.example.wallet",
         "scan_type": "apk",
         "normalized_findings": 2,
+        "imported_sections": ["code_analysis", "manifest_analysis"],
+        "unsupported_sections": [],
     }
     assert {finding.rule_id for finding in findings} == {
         "android_insecure_random",
@@ -76,16 +78,37 @@ def test_import_report_writes_normalized_artifacts(tmp_path):
     output = tmp_path / "report"
     source.write_text(json.dumps(sample_report()))
 
-    result = mobsf.import_report(source, output)
+    result = mobsf.import_report(
+        source,
+        output,
+        client="Example <Client>",
+        consultant="Assessment Team",
+    )
     normalized = json.loads((output / "findings.json").read_text())
     sarif = json.loads((output / "findings.sarif").read_text())
+    page = (output / "index.html").read_text()
+    manifest = json.loads((output / "manifest.json").read_text())
 
     assert result["findings_imported"] == 2
     assert normalized["schema_version"] == 1
     assert all(item["source"] == "mobsf" for item in normalized["findings"])
+    assert normalized["metadata"]["client"] == "Example <Client>"
     assert sarif["runs"][0]["results"][0]["partialFingerprints"]
     assert (output / "index.html").is_file()
     assert (output / "findings.csv").is_file()
+    assert "Example &lt;Client&gt;" in page
+    assert "https://cdn" not in page
+    assert {item["path"] for item in manifest["artifacts"]} == {
+        "app.js",
+        "findings.csv",
+        "findings.json",
+        "findings.sarif",
+        "index.html",
+        "style.css",
+    }
+
+    with pytest.raises(mobsf.MobSFImportError, match="refusing to overwrite"):
+        mobsf.import_report(source, output)
 
 
 @pytest.mark.parametrize("payload", [[], {}, {"permissions": {}}])
@@ -120,3 +143,71 @@ def test_import_neutralizes_spreadsheet_formulas(tmp_path):
 
     exported = next(row for row in rows if row["category"] == "Exported activity")
     assert exported["evidence"].startswith("'=HYPERLINK")
+
+
+def test_load_supports_current_mobsf_wrappers_and_security_sections(tmp_path):
+    source = tmp_path / "current-mobsf.json"
+    source.write_text(
+        json.dumps(
+            {
+                "app_name": "Current Format",
+                "code_analysis": {
+                    "summary": {"high": 1},
+                    "findings": {
+                        "android_logging": {
+                            "metadata": {
+                                "severity": "high",
+                                "description": "Sensitive logging",
+                            },
+                            "files": {"src/App.java": "17,18"},
+                        }
+                    },
+                },
+                "manifest_analysis": {"manifest_findings": []},
+                "network_security": {
+                    "network_findings": [
+                        {
+                            "scope": ["*"],
+                            "description": "Cleartext traffic is allowed",
+                            "severity": "high",
+                        }
+                    ]
+                },
+                "certificate_analysis": {
+                    "certificate_findings": [
+                        [
+                            "warning",
+                            "Application uses the v1 signature scheme",
+                            "Legacy signing scheme",
+                        ]
+                    ]
+                },
+                "binary_analysis": [
+                    {
+                        "name": "lib/example.so",
+                        "nx": {
+                            "severity": "high",
+                            "description": "NX is disabled",
+                        },
+                    }
+                ],
+                "permissions": {},
+                "trackers": {},
+            }
+        )
+    )
+
+    metadata, findings = mobsf.load(source)
+
+    assert len(findings) == 4
+    code = next(item for item in findings if item.rule_id == "android_logging")
+    assert code.line == 17
+    assert code.evidence == "Sensitive logging"
+    assert metadata["imported_sections"] == [
+        "binary_analysis",
+        "certificate_analysis",
+        "code_analysis",
+        "manifest_analysis",
+        "network_security",
+    ]
+    assert metadata["unsupported_sections"] == ["permissions", "trackers"]

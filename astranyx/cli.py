@@ -121,7 +121,13 @@ def run_verify(args):
 def run_import_mobsf(args):
     """Import a MobSF report into normalized Astranyx artifacts."""
     try:
-        result = mobsf.import_report(args.report, args.output)
+        result = mobsf.import_report(
+            args.report,
+            args.output,
+            client=args.client,
+            consultant=args.consultant,
+            assessment_title=args.assessment_title,
+        )
     except mobsf.MobSFImportError as exc:
         raise SystemExit(f"[!] {exc}") from exc
     print(json.dumps(result, indent=2, sort_keys=True))
@@ -276,6 +282,15 @@ def main():
         "--output",
         required=True,
         help="Directory for normalized Astranyx report artifacts",
+    )
+    import_mobsf.add_argument("--client", default="", help="Client name for the report")
+    import_mobsf.add_argument(
+        "--consultant", default="", help="Consultant or assessment team"
+    )
+    import_mobsf.add_argument(
+        "--assessment-title",
+        default="",
+        help="Custom title for the client deliverable",
     )
     import_mobsf.set_defaults(func=run_import_mobsf)
 

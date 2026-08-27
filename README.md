@@ -185,6 +185,16 @@ JSON, CSV, and SARIF artifacts:
 astranyx import mobsf mobsf-report.json --output reports/mobile-assessment
 ```
 
+Add client-facing report information when preparing a deliverable:
+
+```bash
+astranyx import mobsf mobsf-report.json \
+  --output reports/mobile-assessment \
+  --client "Example Corporation" \
+  --consultant "Security Assessment Team" \
+  --assessment-title "Mobile Application Security Assessment"
+```
+
 The importer accepts Android and iOS report metadata, normalizes code and
 manifest findings, removes embedded markup, constrains untrusted paths and text,
 deduplicates stable finding fingerprints, and excludes MobSF checks marked as

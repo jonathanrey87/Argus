@@ -2,20 +2,41 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Astranyx Security Report</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="header">
   <h1>ASTRANYX SECURITY REPORT</h1>
-  <p>WordPress Static Analysis Dashboard</p>
+  <p>{{ASSESSMENT_TITLE}}</p>
   <p><strong>Target:</strong> {{TARGET}}</p>
   <p><strong>Generated:</strong> {{GENERATED}}</p>
 </div>
 
 <div class="container">
+
+<div class="panel report-section">
+  <h2>Executive Summary</h2>
+  <p>{{EXECUTIVE_SUMMARY}}</p>
+</div>
+
+<div class="grid report-section">
+  <div class="panel">
+    <h2>Assessment Information</h2>
+    <table class="metadata-table"><tbody>{{METADATA_ROWS}}</tbody></table>
+  </div>
+  <div class="panel">
+    <h2>Methodology and Limitations</h2>
+    <p>This report normalizes evidence produced by configured Astranyx analyzers
+    and imported security tools. Findings are prioritized using available
+    severity, confidence, source, and location evidence.</p>
+    <p>This is not proof that the application is vulnerability-free. Runtime
+    behavior, authenticated workflows, backend services, and controls not
+    represented in the supplied evidence may remain untested.</p>
+  </div>
+</div>
 
 <div class="risk-card">
   <h2>Overall Risk</h2>
@@ -25,22 +46,18 @@
 </div>
 
 <div class="cards">
-  <div class="card"><div class="label">Risk Score</div><div class="value score">{{CONFIDENCE_SCORE}}/100</div></div>
-  <div class="card"><div class="label">Total Findings</div><div class="value">{{TOTAL}}</div></div>
-  <div class="card"><div class="label">High Confidence</div><div class="value high-text">{{HIGH}}</div></div>
-  <div class="card"><div class="label">Medium Confidence</div><div class="value medium-text">{{MEDIUM}}</div></div>
-  <div class="card"><div class="label">Low Confidence</div><div class="value low-text">{{LOW}}</div></div>
+  <div class="card"><div class="label">Critical</div><div class="value critical-text">{{CRITICAL_SEVERITY}}</div></div>
+  <div class="card"><div class="label">High</div><div class="value high-text">{{HIGH_SEVERITY}}</div></div>
+  <div class="card"><div class="label">Medium</div><div class="value medium-text">{{MEDIUM_SEVERITY}}</div></div>
+  <div class="card"><div class="label">Low</div><div class="value low-text">{{LOW_SEVERITY}}</div></div>
+  <div class="card"><div class="label">Informational</div><div class="value score">{{INFO_SEVERITY}}</div></div>
 </div>
 
-<div class="grid">
-  <div class="panel">
-    <h2>Confidence Breakdown</h2>
-    <canvas id="confidenceChart"></canvas>
-  </div>
-  <div class="panel">
-    <h2>Findings by Category</h2>
-    <canvas id="categoryChart"></canvas>
-  </div>
+<div class="panel report-section">
+  <h2>Assessment Metrics</h2>
+  <p><strong>Total findings:</strong> {{TOTAL}} &nbsp;|&nbsp;
+  <strong>Confidence score:</strong> {{CONFIDENCE_SCORE}}/100 &nbsp;|&nbsp;
+  <strong>Categories:</strong> {{CATEGORY_COUNT}}</p>
 </div>
 
 <div class="panel">
@@ -83,13 +100,6 @@
 
 </div>
 
-<script>
-const HIGH = {{HIGH}};
-const MEDIUM = {{MEDIUM}};
-const LOW = {{LOW}};
-const CATEGORY_LABELS = {{CATEGORY_LABELS}};
-const CATEGORY_VALUES = {{CATEGORY_VALUES}};
-</script>
 <script src="app.js"></script>
 
 </body>

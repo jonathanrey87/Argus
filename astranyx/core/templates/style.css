@@ -5,6 +5,7 @@
   --text: #e5e7eb;
   --muted: #9ca3af;
   --high: #ef4444;
+  --critical: #dc2626;
   --medium: #f59e0b;
   --low: #22c55e;
   --line: #374151;
@@ -90,6 +91,7 @@ body {
 }
 
 .score { color: #93c5fd; }
+.critical-text { color: var(--critical); }
 .high-text { color: var(--high); }
 .medium-text { color: var(--medium); }
 .low-text { color: var(--low); }
@@ -217,4 +219,40 @@ pre {
   color: var(--muted);
   margin-top: 24px;
   font-size: 13px;
+}
+
+.metadata-table th {
+  width: 36%;
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --card: #f8fafc;
+    --text: #111827;
+    --muted: #475569;
+    --line: #cbd5e1;
+  }
+
+  .header {
+    background: #0f172a;
+    color: #ffffff;
+  }
+
+  .toolbar, .toggle, script {
+    display: none !important;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .panel, .risk-card, .card {
+    break-inside: avoid;
+  }
+
+  .details {
+    display: table-row;
+  }
 }
