@@ -176,6 +176,37 @@ python -m astranyx.cli wordpress ./path/to/plugin
 
 Only analyze plugins and code that you own or are authorized to assess.
 
+### Run a complete assessment
+
+Import, normalize, review, seal, and verify a mobile assessment with one command:
+
+```bash
+astranyx assess mobsf-report.json \
+  --output assessments/example \
+  --client "Example Corporation" \
+  --consultant "Security Assessment Team"
+```
+
+Imported findings default to `needs_validation`; Astranyx never silently labels
+scanner output as confirmed. Optional tester decisions are supplied in a local
+JSON file keyed by stable finding fingerprint:
+
+```json
+{
+  "reviews": {
+    "asx-example": {
+      "state": "confirmed",
+      "note": "Reproduced during authorized testing."
+    }
+  }
+}
+```
+
+Allowed states are `confirmed`, `needs_validation`, `rejected`, `accepted_risk`,
+and `not_tested`. Unknown fingerprints and invalid states fail closed. The
+command reports success only after verifying every generated artifact against
+the assessment manifest.
+
 ### Import a MobSF mobile assessment
 
 Normalize an existing MobSF static-analysis JSON report into Astranyx HTML,

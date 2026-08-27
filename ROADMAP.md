@@ -14,6 +14,8 @@
 - [ ] Pluggable analyzer registry
 - [x] Baseline and retest finding comparison
 - [x] MobSF static-report import
+- [x] One-command verified mobile assessment workflow
+- [x] Fingerprint-bound tester review states
 
 ## v1.0
 - [x] Modular WordPress scanner

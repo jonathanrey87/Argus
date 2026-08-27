@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 from astranyx import __version__
+from astranyx.assessment import workflow as assessment_workflow
 from astranyx.commands import report as report_command
 from astranyx.comparison import retest
 from astranyx.device import ios
@@ -138,6 +139,22 @@ def run_retest(args):
     try:
         result = retest.write_report(args.baseline, args.current, args.output)
     except retest.RetestError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+def run_assess(args):
+    """Run the complete local-first mobile assessment workflow."""
+    try:
+        result = assessment_workflow.run(
+            args.report,
+            args.output,
+            client=args.client,
+            consultant=args.consultant,
+            assessment_title=args.assessment_title,
+            review_file=args.review_file,
+        )
+    except assessment_workflow.AssessmentError as exc:
         raise SystemExit(f"[!] {exc}") from exc
     print(json.dumps(result, indent=2, sort_keys=True))
 
@@ -293,6 +310,30 @@ def main():
         help="Custom title for the client deliverable",
     )
     import_mobsf.set_defaults(func=run_import_mobsf)
+
+    assess_parser = subparsers.add_parser(
+        "assess",
+        help="Import, review, seal, and verify a mobile assessment",
+    )
+    assess_parser.add_argument("report", help="MobSF static-analysis JSON report")
+    assess_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="New directory for the verified assessment bundle",
+    )
+    assess_parser.add_argument("--client", default="", help="Client name")
+    assess_parser.add_argument(
+        "--consultant", default="", help="Consultant or assessment team"
+    )
+    assess_parser.add_argument(
+        "--assessment-title", default="", help="Client-facing assessment title"
+    )
+    assess_parser.add_argument(
+        "--review-file",
+        help="Optional JSON decisions keyed by Astranyx fingerprint",
+    )
+    assess_parser.set_defaults(func=run_assess)
 
     retest_parser = subparsers.add_parser(
         "retest",

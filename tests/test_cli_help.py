@@ -45,6 +45,16 @@ from astranyx.cli import main
                 "manifest.json",
             ),
         ),
+        (
+            ["astranyx", "assess", "--help"],
+            (
+                "--output",
+                "--client",
+                "--consultant",
+                "--assessment-title",
+                "--review-file",
+            ),
+        ),
     ],
 )
 def test_cli_help(

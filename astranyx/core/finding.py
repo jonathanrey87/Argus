@@ -8,6 +8,13 @@ from dataclasses import dataclass, field
 from pathlib import PurePath
 
 FINGERPRINT_VERSION = 1
+REVIEW_STATES = {
+    "accepted_risk",
+    "confirmed",
+    "needs_validation",
+    "not_tested",
+    "rejected",
+}
 
 
 def fingerprint(category: str, file: str, evidence: str) -> str:
@@ -41,6 +48,8 @@ class Finding:
     reason: str = ""
     source: str = "astranyx"
     rule_id: str = ""
+    review_state: str = "needs_validation"
+    review_note: str = ""
     fingerprint: str = field(init=False)
 
     def __post_init__(self):

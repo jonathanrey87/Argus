@@ -21,6 +21,11 @@ def finding_to_result(finding):
         "partialFingerprints": {
             "astranyxFinding/v1": finding.fingerprint,
         },
+        "properties": {
+            "astranyxReviewState": finding.review_state,
+            "astranyxReviewNote": finding.review_note,
+            "astranyxSource": finding.source,
+        },
         "level": level,
         "message": {"text": finding.reason or finding.note or finding.category},
         "locations": [

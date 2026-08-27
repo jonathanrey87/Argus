@@ -137,13 +137,14 @@ def render_finding_rows(findings):
   <td><button class="toggle" onclick="toggleDetails({i})">▶</button></td>
   <td>{html.escape(finding.severity)}</td>
   <td><span class="badge {band}">{finding.confidence}%</span></td>
+  <td>{html.escape(finding.review_state.replace("_", " ").title())}</td>
   <td>{html.escape(finding.category)}</td>
   <td class="file">{html.escape(finding.file)}</td>
   <td>{finding.line}</td>
   <td>{html.escape(finding.reason)}</td>
 </tr>
 <tr id="details-{i}" class="details">
-  <td colspan="7">
+  <td colspan="8">
     <div class="details-box">
       <h4>Source Preview</h4>
       <div class="source-preview">{preview_html}</div>
@@ -166,6 +167,10 @@ def render_finding_rows(findings):
 
       <h4>Note</h4>
       <p>{html.escape(finding.note)}</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> {html.escape(finding.review_state.replace("_", " ").title())}</p>
+      <p>{html.escape(finding.review_note or "No tester decision recorded.")}</p>
     </div>
   </td>
 </tr>
@@ -189,6 +194,8 @@ def write_csv(findings, output_dir):
                 "fingerprint",
                 "severity",
                 "confidence",
+                "review_state",
+                "review_note",
                 "category",
                 "file",
                 "line",
@@ -205,6 +212,8 @@ def write_csv(findings, output_dir):
                         item.fingerprint,
                         item.severity,
                         item.confidence,
+                        item.review_state,
+                        item.review_note,
                         item.category,
                         item.file,
                         item.line,

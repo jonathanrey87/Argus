@@ -321,6 +321,27 @@ def import_report(
 ) -> dict[str, Any]:
     """Import MobSF JSON and render normalized Astranyx artifacts."""
     metadata, findings = load(path)
+    return write_report(
+        metadata,
+        findings,
+        output,
+        client=client,
+        consultant=consultant,
+        assessment_title=assessment_title,
+    )
+
+
+def write_report(
+    metadata: dict[str, Any],
+    findings: list[Finding],
+    output: str | Path,
+    *,
+    client: str = "",
+    consultant: str = "",
+    assessment_title: str = "",
+) -> dict[str, Any]:
+    """Render normalized findings as a sealed Astranyx assessment bundle."""
+    metadata = dict(metadata)
     metadata.update(
         {
             key: _plain_text(value)
@@ -349,7 +370,9 @@ def import_report(
             f"refusing to overwrite existing output directory: {output_path}"
         ) from exc
     report = Report(
-        metadata["package_name"] or metadata["app_name"] or str(path),
+        metadata.get("package_name")
+        or metadata.get("app_name")
+        or "mobile-application",
         findings,
         metadata=metadata,
     )

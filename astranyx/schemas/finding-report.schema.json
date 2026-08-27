@@ -18,7 +18,8 @@
       "type": "object",
       "required": [
         "fingerprint", "category", "severity", "file", "line",
-        "evidence", "note", "confidence", "reason", "source", "rule_id"
+        "evidence", "note", "confidence", "reason", "source", "rule_id",
+        "review_state", "review_note"
       ],
       "properties": {
         "fingerprint": {"type": "string", "pattern": "^asx-[a-f0-9]{24}$"},
@@ -36,6 +37,14 @@
         "reason": {"type": "string"}
         ,"source": {"type": "string", "minLength": 1}
         ,"rule_id": {"type": "string"}
+        ,"review_state": {
+          "type": "string",
+          "enum": [
+            "accepted_risk", "confirmed", "needs_validation", "not_tested",
+            "rejected"
+          ]
+        }
+        ,"review_note": {"type": "string"}
       },
       "additionalProperties": false
     }
