@@ -28,7 +28,7 @@ def run(args):
     analyst = getattr(
         args,
         "analyst",
-        "Jonathan Mendiola",
+        None,
     )
     target = getattr(args, "target", None)
     trace_enabled = bool(getattr(args, "trace_enabled", False))
@@ -70,7 +70,7 @@ def run(args):
                 "created": timestamp.isoformat(),
                 "status": "created",
                 "target": target,
-                "analyst": analyst,
+                "analyst": analyst or "unspecified",
                 "astranyx_version": __version__,
                 "trace_enabled": trace_enabled,
                 "modules": [],

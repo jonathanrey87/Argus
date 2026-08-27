@@ -172,7 +172,7 @@ def _write_manifest(
 def run(
     target: str | Path,
     *,
-    analyst: str = "Jonathan Mendiola",
+    analyst: str = "unspecified",
     profile: str = "auto",
     recursive: bool = True,
     trace_enabled: bool = False,

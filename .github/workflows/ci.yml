@@ -15,8 +15,9 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.13"]
+        python-version: ["3.11", "3.12", "3.13"]
 
     steps:
 
@@ -39,8 +40,7 @@ jobs:
           ruff check astranyx tests
 
       - name: Black
-        run: |
-          black --check --target-version py313 astranyx tests
+        run: black --check astranyx tests
 
       - name: Tests
         run: |

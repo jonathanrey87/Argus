@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astranyx.dev/schemas/finding-report-v1.json",
+  "title": "Astranyx Finding Report",
+  "type": "object",
+  "required": ["schema_version", "summary", "findings"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "summary": {"type": "object"},
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "fingerprint", "category", "severity", "file", "line",
+        "evidence", "note", "confidence", "reason", "source", "rule_id"
+      ],
+      "properties": {
+        "fingerprint": {"type": "string", "pattern": "^asx-[a-f0-9]{24}$"},
+        "category": {"type": "string", "minLength": 1},
+        "severity": {
+          "type": "string",
+          "enum": ["Critical", "High", "Medium", "Low", "Info"]
+        },
+        "file": {"type": "string", "minLength": 1},
+        "full_path": {"type": "string"},
+        "line": {"type": "integer", "minimum": 1},
+        "evidence": {"type": "string"},
+        "note": {"type": "string"},
+        "confidence": {"type": "integer", "minimum": 0, "maximum": 100},
+        "reason": {"type": "string"}
+        ,"source": {"type": "string", "minLength": 1}
+        ,"rule_id": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

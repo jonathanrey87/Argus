@@ -38,6 +38,13 @@ from astranyx.cli import main
                 "local, authorized target",
             ),
         ),
+        (
+            ["astranyx", "verify", "--help"],
+            (
+                "workspace",
+                "manifest.json",
+            ),
+        ),
     ],
 )
 def test_cli_help(

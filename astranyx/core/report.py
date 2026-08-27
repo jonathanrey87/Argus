@@ -3,6 +3,8 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
+REPORT_SCHEMA_VERSION = 1
+
 
 @dataclass
 class Report:
@@ -32,6 +34,7 @@ class Report:
     def to_json(self):
         return json.dumps(
             {
+                "schema_version": REPORT_SCHEMA_VERSION,
                 "summary": self.summary(),
                 "findings": [vars(f) for f in self.findings],
             },

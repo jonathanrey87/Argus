@@ -12,6 +12,8 @@
 - [ ] Unified evidence graph
 - [ ] Investigation dashboard
 - [ ] Pluggable analyzer registry
+- [x] Baseline and retest finding comparison
+- [x] MobSF static-report import
 
 ## v1.0
 - [x] Modular WordPress scanner

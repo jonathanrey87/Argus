@@ -10,6 +10,7 @@ from astranyx.intelligence.risk import calculate, rating
 from astranyx.intelligence.surface import build_attack_surface
 
 TEMPLATE_DIR = Path(__file__).parent / "templates"
+SPREADSHEET_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
 
 
 def confidence_band(conf):
@@ -132,24 +133,44 @@ def render_finding_rows(findings):
     return rows
 
 
+def _csv_cell(value):
+    """Prevent imported text from becoming a spreadsheet formula."""
+    if isinstance(value, str) and value.startswith(SPREADSHEET_FORMULA_PREFIXES):
+        return f"'{value}"
+    return value
+
+
 def write_csv(findings, output_dir):
     with (output_dir / "findings.csv").open("w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(
-            ["severity", "confidence", "category", "file", "line", "reason", "evidence"]
+            [
+                "fingerprint",
+                "severity",
+                "confidence",
+                "category",
+                "file",
+                "line",
+                "reason",
+                "evidence",
+            ]
         )
 
         for item in findings:
             writer.writerow(
-                [
-                    item.severity,
-                    item.confidence,
-                    item.category,
-                    item.file,
-                    item.line,
-                    item.reason,
-                    item.evidence,
-                ]
+                map(
+                    _csv_cell,
+                    [
+                        item.fingerprint,
+                        item.severity,
+                        item.confidence,
+                        item.category,
+                        item.file,
+                        item.line,
+                        item.reason,
+                        item.evidence,
+                    ],
+                )
             )
 
 

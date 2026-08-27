@@ -102,6 +102,12 @@ Astranyx contains support for:
 - Risk summaries
 - Attack-surface classification
 
+Finding JSON uses a versioned schema distributed with the package. Each finding
+has an `asx-` fingerprint derived from its category, relative file path, and
+normalized evidence. The identity remains stable when a checkout moves or line
+numbers change, enabling future baseline and retest workflows. SARIF exports
+carry the same identity in `partialFingerprints`.
+
 ## Requirements
 
 - Python 3.11 or newer
@@ -170,6 +176,33 @@ python -m astranyx.cli wordpress ./path/to/plugin
 
 Only analyze plugins and code that you own or are authorized to assess.
 
+### Import a MobSF mobile assessment
+
+Normalize an existing MobSF static-analysis JSON report into Astranyx HTML,
+JSON, CSV, and SARIF artifacts:
+
+```bash
+astranyx import mobsf mobsf-report.json --output reports/mobile-assessment
+```
+
+The importer accepts Android and iOS report metadata, normalizes code and
+manifest findings, removes embedded markup, constrains untrusted paths and text,
+deduplicates stable finding fingerprints, and excludes MobSF checks marked as
+secure. Input files are processed locally and limited to 50 MiB.
+
+### Compare a baseline and retest
+
+Compare two normalized Astranyx finding reports:
+
+```bash
+astranyx retest baseline/findings.json current/findings.json \
+  --output reports/retest
+```
+
+The sealed retest bundle classifies findings as new, fixed, persistent, changed,
+or regressed. It contains machine-readable JSON, a client-readable Markdown
+summary, and a SHA-256 artifact manifest.
+
 ### Run an investigation
 
 Create an empty workspace with default metadata:
@@ -202,12 +235,66 @@ target, Astranyx runs each selected analyzer, isolates module failures, updates
 `metadata.json`, and writes `manifest.json` with SHA-256 hashes for every generated
 analysis and report artifact.
 
+Verify every sealed artifact before sharing or resuming an investigation:
+
+```bash
+astranyx verify investigations/INV-YYYYMMDD-HHMMSS
+```
+
+The command checks the recorded size and SHA-256 digest of every artifact and
+returns a non-zero exit status for missing, modified, duplicated, or unsafe
+artifact paths. Its JSON output can be retained as chain-of-custody evidence or
+consumed by CI automation.
+
 Choose a different workspace parent directory when needed:
 
 ```bash
 astranyx investigate ./authorized-target \
   --workspace-root ./casework
 ```
+
+### Collect read-only iOS evidence
+
+Astranyx can use an optional `pymobiledevice3` installation to inventory a
+trusted, USB-connected iPhone without changing device state. First create an
+isolated environment with iOS support, create an investigation, and verify the
+collector:
+
+```bash
+python -m pip install -e '.[ios]'
+astranyx investigate
+astranyx device doctor
+```
+
+Collect a privacy-redacted snapshot inside that investigation:
+
+```bash
+astranyx device snapshot \
+  --investigation investigations/INV-YYYYMMDD-HHMMSS
+```
+
+Snapshots include device/build information, installed application metadata,
+collection timestamps, and a SHA-256 manifest. Serial numbers, UDIDs, phone
+numbers, Apple Account identifiers, and similar identifiers are replaced with
+stable redaction tokens. Raw device output is not retained.
+
+Compare two snapshots locally:
+
+```bash
+astranyx device compare before.json after.json -o comparison.json
+```
+
+Verify that a snapshot has not changed since collection:
+
+```bash
+astranyx device verify ios-snapshot-YYYYMMDDTHHMMSSZ.json
+```
+
+Comparison automatically verifies any sidecar manifests found beside its input
+snapshots and refuses to compare evidence whose size or SHA-256 digest differs.
+
+Device commands are intentionally read-only. They do not jailbreak devices,
+bypass protections, extract credentials, or automate account actions.
 
 Example completed workspace:
 
@@ -360,4 +447,11 @@ Created by Jonathan Mendiola.
 
 ## License
 
-A `LICENSE` file exists in the repository but currently contains no license text. Add the intended license before distributing the project.
+Astranyx Community Edition is licensed under the Apache License 2.0. It can be
+used, modified, and distributed—including commercially—subject to the license
+terms in [LICENSE](LICENSE).
+
+The project follows an open-core strategy: the local CLI, schemas, and core
+analyzers remain the adoption layer, while future team workflows, managed
+services, premium reporting, and support may be offered commercially. See
+[COMMERCIALIZATION.md](COMMERCIALIZATION.md) for the product boundary.

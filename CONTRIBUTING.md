@@ -1,5 +1,9 @@
 # Contributing to Astranyx
 
+By submitting a contribution, you agree that it is provided under the Apache
+License 2.0 and represent that you have the right to submit it. Do not submit
+employer-owned, confidential, or third-party code without authorization.
+
 Thank you for your interest in contributing to Astranyx.
 
 ## Project Mission

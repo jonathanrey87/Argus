@@ -52,6 +52,7 @@ def test_create_investigation_workspace(
     assert metadata["id"] == workspace.name
     assert metadata["status"] == "created"
     assert metadata["target"] is None
+    assert metadata["analyst"] == "unspecified"
     assert metadata["astranyx_version"] == __version__
     assert metadata["trace_enabled"] is False
     assert metadata["modules"] == []

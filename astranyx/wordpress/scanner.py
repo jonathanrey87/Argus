@@ -1,26 +1,13 @@
 from collections import Counter
-from dataclasses import dataclass
 from pathlib import Path
 
+from astranyx.core.finding import Finding
 from astranyx.core.html import render
 from astranyx.core.report import Report
 from astranyx.core.sarif import export as export_sarif
 from astranyx.wordpress.analyzer import analyze_finding
 from astranyx.wordpress.rules.registry import get_rules_for_file
 from astranyx.wordpress.taint import analyze as taint_analyze
-
-
-@dataclass
-class Finding:
-    category: str
-    severity: str
-    file: str
-    full_path: str
-    line: int
-    evidence: str
-    note: str
-    confidence: int = 50
-    reason: str = ""
 
 
 def make_note(category):

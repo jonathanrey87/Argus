@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://astranyx.dev/schemas/retest-report-v1.json",
+  "title": "Astranyx Baseline Retest Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "comparison_type",
+    "baseline",
+    "current",
+    "summary",
+    "new",
+    "fixed",
+    "persistent",
+    "changed",
+    "regressed"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "comparison_type": {"const": "baseline_retest"},
+    "baseline": {"type": "string"},
+    "current": {"type": "string"},
+    "summary": {
+      "type": "object",
+      "required": [
+        "baseline_total", "current_total", "new", "fixed",
+        "persistent", "changed", "regressed"
+      ],
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "new": {"type": "array", "items": {"type": "object"}},
+    "fixed": {"type": "array", "items": {"type": "object"}},
+    "persistent": {"type": "array", "items": {"type": "object"}},
+    "changed": {"type": "array", "items": {"type": "object"}},
+    "regressed": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

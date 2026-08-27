@@ -7,6 +7,7 @@ name = "astranyx-engine"
 version = "4.0.0a2"
 description = "Astranyx Investigation Engine"
 readme = "README.md"
+license = "Apache-2.0"
 requires-python = ">=3.11"
 authors = [
     { name = "Jonathan Mendiola" }
@@ -21,6 +22,7 @@ keywords = [
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache Software License",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
@@ -35,6 +37,9 @@ dependencies = [
 	"arize-otel>=0.13.0,<0.14",
 	"opentelemetry-api>=1.44.0,<2",
 ]
+
+[project.optional-dependencies]
+ios = ["pymobiledevice3"]
 
 [project.urls]
 Homepage = "https://github.com/jonathanrey87/Astranyx"
@@ -75,6 +80,7 @@ exclude = [
     "templates/*.css",
     "templates/*.js"
 ]
+"astranyx" = ["schemas/*.json"]
 
 [tool.black]
 line-length = 88

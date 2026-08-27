@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from astranyx import __version__
+
 SARIF_VERSION = "2.1.0"
 
 
@@ -15,7 +17,10 @@ def finding_to_result(finding):
         level = "warning"
 
     return {
-        "ruleId": finding.category.replace(" ", "_"),
+        "ruleId": finding.rule_id or finding.category.replace(" ", "_"),
+        "partialFingerprints": {
+            "astranyxFinding/v1": finding.fingerprint,
+        },
         "level": level,
         "message": {"text": finding.reason or finding.note or finding.category},
         "locations": [
@@ -41,7 +46,7 @@ def export(report, output_dir):
                 "tool": {
                     "driver": {
                         "name": "Astranyx",
-                        "version": "1.2.0",
+                        "version": __version__,
                         "informationUri": "https://github.com/jonathanrey87/Astranyx",
                     }
                 },

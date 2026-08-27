@@ -1,8 +1,13 @@
 import argparse
+import json
+from pathlib import Path
 
 from astranyx import __version__
 from astranyx.commands import report as report_command
-from astranyx.investigation import orchestrator
+from astranyx.comparison import retest
+from astranyx.device import ios
+from astranyx.importers import mobsf
+from astranyx.investigation import integrity, orchestrator
 from astranyx.investigation import run as investigation_command
 from astranyx.modules import js
 from astranyx.tracing import configure_tracing
@@ -62,6 +67,75 @@ def run_investigation(args):
         raise SystemExit(f"[!] {exc}") from exc
 
 
+def run_device_doctor(args):
+    """Report whether read-only iOS collection is available."""
+    result = ios.doctor()
+    print(json.dumps(result, indent=2, sort_keys=True))
+    if not result["ready"]:
+        raise SystemExit(1)
+
+
+def run_device_snapshot(args):
+    """Collect redacted, read-only iOS evidence."""
+    try:
+        path = ios.snapshot(args.investigation)
+    except ios.DeviceCollectionError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(path)
+
+
+def run_device_compare(args):
+    """Compare two previously collected iOS snapshots."""
+    try:
+        result = ios.compare_snapshots(args.before, args.after)
+    except ios.DeviceCollectionError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    rendered = json.dumps(result, indent=2, sort_keys=True) + "\n"
+    if args.output:
+        Path(args.output).write_text(rendered, encoding="utf-8")
+        print(args.output)
+    else:
+        print(rendered, end="")
+
+
+def run_device_verify(args):
+    """Verify an iOS snapshot against its integrity manifest."""
+    try:
+        result = ios.verify_snapshot(args.snapshot)
+    except ios.DeviceCollectionError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+def run_verify(args):
+    """Verify every artifact sealed in an investigation manifest."""
+    try:
+        result = integrity.verify(args.workspace)
+    except integrity.IntegrityError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(json.dumps(result, indent=2, sort_keys=True))
+    if not result["valid"]:
+        raise SystemExit(1)
+
+
+def run_import_mobsf(args):
+    """Import a MobSF report into normalized Astranyx artifacts."""
+    try:
+        result = mobsf.import_report(args.report, args.output)
+    except mobsf.MobSFImportError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+def run_retest(args):
+    """Compare a baseline assessment with a current retest."""
+    try:
+        result = retest.write_report(args.baseline, args.current, args.output)
+    except retest.RetestError as exc:
+        raise SystemExit(f"[!] {exc}") from exc
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
 def main():
     """Astranyx command-line entry point."""
     tracer = configure_tracing()
@@ -78,6 +152,46 @@ def main():
     )
 
     subparsers = parser.add_subparsers(dest="command")
+
+    # Read-only iOS evidence commands
+    device_parser = subparsers.add_parser(
+        "device",
+        help="Collect and compare read-only device evidence",
+    )
+    device_subparsers = device_parser.add_subparsers(dest="device_command")
+
+    device_doctor = device_subparsers.add_parser(
+        "doctor",
+        help="Check iOS collector and trusted USB device availability",
+    )
+    device_doctor.set_defaults(func=run_device_doctor)
+
+    device_snapshot = device_subparsers.add_parser(
+        "snapshot",
+        help="Collect a redacted iOS snapshot",
+    )
+    device_snapshot.add_argument(
+        "--investigation",
+        required=True,
+        help="Existing Astranyx investigation workspace",
+    )
+    device_snapshot.set_defaults(func=run_device_snapshot)
+
+    device_compare = device_subparsers.add_parser(
+        "compare",
+        help="Compare two iOS snapshots without contacting a device",
+    )
+    device_compare.add_argument("before", help="Earlier snapshot JSON")
+    device_compare.add_argument("after", help="Later snapshot JSON")
+    device_compare.add_argument("-o", "--output", help="Optional output JSON")
+    device_compare.set_defaults(func=run_device_compare)
+
+    device_verify = device_subparsers.add_parser(
+        "verify",
+        help="Verify a snapshot against its SHA-256 manifest",
+    )
+    device_verify.add_argument("snapshot", help="Snapshot JSON to verify")
+    device_verify.set_defaults(func=run_device_verify)
 
     # JavaScript commands
     js_parser = subparsers.add_parser(
@@ -147,6 +261,45 @@ def main():
 
     wordpress_parser.set_defaults(func=run_wordpress)
 
+    import_parser = subparsers.add_parser(
+        "import",
+        help="Import findings from an external security tool",
+    )
+    import_subparsers = import_parser.add_subparsers(dest="import_format")
+    import_mobsf = import_subparsers.add_parser(
+        "mobsf",
+        help="Import a MobSF static-analysis JSON report",
+    )
+    import_mobsf.add_argument("report", help="MobSF JSON report")
+    import_mobsf.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Directory for normalized Astranyx report artifacts",
+    )
+    import_mobsf.set_defaults(func=run_import_mobsf)
+
+    retest_parser = subparsers.add_parser(
+        "retest",
+        help="Compare baseline and current Astranyx finding reports",
+    )
+    retest_parser.add_argument("baseline", help="Earlier findings.json report")
+    retest_parser.add_argument("current", help="Current findings.json report")
+    retest_parser.add_argument(
+        "-o", "--output", required=True, help="Directory for the sealed retest bundle"
+    )
+    retest_parser.set_defaults(func=run_retest)
+
+    verify_parser = subparsers.add_parser(
+        "verify",
+        help="Verify the integrity of an investigation workspace",
+    )
+    verify_parser.add_argument(
+        "workspace",
+        help="Investigation workspace containing manifest.json",
+    )
+    verify_parser.set_defaults(func=run_verify)
+
     # Investigation command
     investigation_parser = subparsers.add_parser(
         "investigate",
@@ -165,7 +318,7 @@ def main():
 
     investigation_parser.add_argument(
         "--analyst",
-        default="Jonathan Mendiola",
+        default="unspecified",
         help="Name of the analyst creating the investigation",
     )
 
