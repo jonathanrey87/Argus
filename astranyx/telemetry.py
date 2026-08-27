@@ -6,12 +6,12 @@ command-line interface remain usable without the optional tracing stack.
 
 from __future__ import annotations
 
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from enum import Enum
 from typing import Any
 
 try:
-    from opentelemetry import trace
+    from opentelemetry import trace as _backend_trace
     from opentelemetry.trace import Status, StatusCode
 except ImportError:
 
@@ -52,4 +52,70 @@ except ImportError:
         def get_tracer(_name: str) -> _NoOpTracer:
             return _NoOpTracer()
 
-    trace = _NoOpTrace()
+    _backend_trace = _NoOpTrace()
+
+
+SAFE_ATTRIBUTES = {
+    "astranyx.command",
+    "astranyx.investigation.profile",
+    "astranyx.javascript.files_discovered",
+    "astranyx.javascript.files_failed",
+    "astranyx.javascript.files_processed",
+    "astranyx.javascript.files_with_findings",
+    "astranyx.javascript.findings_total",
+    "astranyx.javascript.recursive",
+    "astranyx.javascript.routes_unique",
+    "astranyx.subcommand",
+    "astranyx.trace.enabled",
+    "astranyx.workspace.directories",
+}
+
+
+class _PrivacySafeSpan:
+    """Allow only aggregate, non-identifying telemetry fields."""
+
+    def __init__(self, span: Any) -> None:
+        self._span = span
+
+    def set_attribute(self, name: str, value: Any) -> None:
+        if name in SAFE_ATTRIBUTES:
+            self._span.set_attribute(name, value)
+
+    def set_status(self, status: Status) -> None:
+        status_code = getattr(status, "status_code", StatusCode.UNSET)
+        self._span.set_status(Status(status_code))
+
+    def record_exception(self, _exception: BaseException) -> None:
+        # Exception messages frequently contain customer paths or source details.
+        return None
+
+
+class _PrivacySafeTracer:
+    def __init__(self, tracer: Any) -> None:
+        self._tracer = tracer
+
+    @contextmanager
+    def start_as_current_span(self, name: str):
+        with self._tracer.start_as_current_span(name) as span:
+            yield _PrivacySafeSpan(span)
+
+
+class _PrivacySafeTrace:
+    """No-op by default; explicitly enabled after telemetry registration."""
+
+    def __init__(self) -> None:
+        self._enabled = False
+
+    def enable(self) -> None:
+        self._enabled = True
+
+    def disable(self) -> None:
+        self._enabled = False
+
+    def get_tracer(self, name: str):
+        if not self._enabled:
+            return _NoOpTracer()
+        return _PrivacySafeTracer(_backend_trace.get_tracer(name))
+
+
+trace = _PrivacySafeTrace()

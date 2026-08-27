@@ -33,13 +33,14 @@ classifiers = [
     "Topic :: Security",
     "Topic :: Software Development :: Quality Assurance"
 ]
-dependencies = [
-	"arize-otel>=0.13.0,<0.14",
-	"opentelemetry-api>=1.44.0,<2",
-]
+dependencies = []
 
 [project.optional-dependencies]
 ios = ["pymobiledevice3"]
+telemetry = [
+	"arize-otel>=0.13.0,<0.14",
+	"opentelemetry-api>=1.44.0,<2",
+]
 
 [project.urls]
 Homepage = "https://github.com/jonathanrey87/Astranyx"

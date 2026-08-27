@@ -9,7 +9,16 @@ except ImportError:
 
 
 def configure_tracing():
-    """Configure Arize tracing when credentials are available."""
+    """Configure privacy-filtered tracing only after explicit opt-in."""
+    enabled = os.getenv("ASTRANYX_TELEMETRY", "").casefold() in {
+        "1",
+        "true",
+        "yes",
+    }
+    if not enabled:
+        trace.disable()
+        return None
+
     space_id = os.getenv("ARIZE_SPACE_ID")
     api_key = os.getenv("ARIZE_API_KEY")
 
@@ -25,4 +34,5 @@ def configure_tracing():
         project_name="astranyx",
     )
 
+    trace.enable()
     return trace.get_tracer("astranyx")

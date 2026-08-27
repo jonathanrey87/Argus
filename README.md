@@ -442,6 +442,19 @@ Roadmap items are plans, not completed capabilities.
 
 ## Responsible use
 
+## Privacy and telemetry
+
+Astranyx is local-first. Assessment inputs, source code, evidence, findings, and
+generated reports remain on the tester's machine unless the tester deliberately
+moves them elsewhere. Core installation includes no telemetry dependency and
+telemetry is disabled by default—even when provider credentials are present.
+
+Optional aggregate telemetry requires installation with `.[telemetry]`, valid
+provider credentials, and the explicit `ASTRANYX_TELEMETRY=true` opt-in. The
+privacy filter permits command names, profiles, and numeric aggregate counts; it
+drops customer paths, target names, analyst identities, filenames, evidence,
+source content, and exception details.
+
 Use Astranyx only on:
 
 - Systems and code you own
