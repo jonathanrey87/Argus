@@ -1,0 +1,173 @@
+{
+  "reviews": {
+    "asx-0105aa55ac47aeda18aa1a01": {
+      "note": "Confirmed from the APK signing-certificate analysis; this training build uses a debug certificate.",
+      "state": "confirmed"
+    },
+    "asx-052f95c6189ec9ecc5b94c67": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-07f7d34d52b38eb292f406f3": {
+      "note": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+      "state": "confirmed"
+    },
+    "asx-091be4ba23fac2428992cc49": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-0931e3514033de63d102c5b0": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-096dda1a14c4efbc5faf0135": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-12ac2a4d62b64ce52b26e96a": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-25e21623ac21a8bba11e5487": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-27a4d5d5223848e004762aa6": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-2d804c9d202172797209bcd7": {
+      "note": "Confirmed by static manifest inspection: the content provider is exported without a protecting permission.",
+      "state": "confirmed"
+    },
+    "asx-37081489feccd3f82850c665": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-3882dd95fbd3a540805cd549": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-3f3f28a805471dcb6bae32de": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-3f9a16fbb8f64bef6e3db94d": {
+      "note": "Confirmed by static manifest inspection: android:allowBackup is enabled.",
+      "state": "confirmed"
+    },
+    "asx-440d92b068ec97e32053d928": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-48409ea0a9c40c577aa42d51": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-49e89c981b217848c05366eb": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-59b3c9d0c9b90d81915683e8": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-64ba39f2472bcf32d54e9be9": {
+      "note": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+      "state": "confirmed"
+    },
+    "asx-652c489e6ef6a3cd627a099a": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-6a41233f616841c6056ac0b4": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-7ac7274f6084992e65cd91d0": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-7c7dceff32d87978b2950dad": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-85b7a67c742c373ea61fa78f": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-8fd625ed885eb6e9b0a91792": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-94773aa936a8b33869e75bd4": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-a74ca98e1daf84a0f944232e": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-d1078560fa61c1fccbb4ec22": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-d3123db19e4ac1973ff68edb": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-d35e1b96478a0e842ebb350e": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-dbdbd0e1c4443239db97be96": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-dcd9d831cc83b127c7a67381": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e08963f5d88cfba7351143b1": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e148c4df97eeeeefb7bd29aa": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e54ac587b44d31e7a622d47f": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e7d92c5b21bef88fef78ab9d": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e81fbaa32ba0b5c8d5a8b1fd": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-e93e1c73e1e22201b6e619b0": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-ee61071f957448179b570eeb": {
+      "note": "Confirmed from the packaged manifest: the analyzed debug build is debuggable.",
+      "state": "confirmed"
+    },
+    "asx-f3c70e5f3b0b95dd4b7b16bc": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-f510d3fab3104a20c0155e32": {
+      "note": "",
+      "state": "needs_validation"
+    },
+    "asx-faf068fb77a2420fd04d6cbb": {
+      "note": "",
+      "state": "needs_validation"
+    }
+  },
+  "schema_version": 1
+}

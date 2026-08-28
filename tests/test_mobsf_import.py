@@ -215,3 +215,33 @@ def test_load_supports_current_mobsf_wrappers_and_security_sections(tmp_path):
         "network_security",
     ]
     assert metadata["unsupported_sections"] == ["permissions", "trackers"]
+
+
+def test_android_binary_findings_drop_positive_checks_and_deduplicate_paths(tmp_path):
+    source = tmp_path / "binary-mobsf.json"
+    source.write_text(
+        json.dumps(
+            {
+                "code_analysis": {},
+                "manifest_analysis": [],
+                "binary_analysis": [
+                    {
+                        "name": "apktool_out/lib/arm64-v8a/libdemo.so",
+                        "nx": {"severity": "high", "description": "NX disabled"},
+                        "pie": {"severity": "info", "description": "PIE enabled"},
+                    },
+                    {
+                        "name": "lib/arm64-v8a/libdemo.so",
+                        "nx": {"severity": "high", "description": "NX disabled"},
+                        "pie": {"severity": "info", "description": "PIE enabled"},
+                    },
+                ],
+            }
+        )
+    )
+
+    _, findings = mobsf.load(source)
+
+    assert len(findings) == 1
+    assert findings[0].rule_id == "binary_nx"
+    assert findings[0].file == "lib/arm64-v8a/libdemo.so"

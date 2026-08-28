@@ -10,6 +10,12 @@ def test_extracts_only_explicit_masvs_controls():
     assert MASVS_VERSION == "2.1.0"
 
 
+def test_signing_certificate_is_not_misclassified_as_network():
+    assert infer_group("Application signed with debug certificate") == [
+        "MASVS-RESILIENCE"
+    ]
+
+
 def test_infers_broad_group_without_fabricating_control():
     assert infer_group("Cleartext network traffic") == ["MASVS-NETWORK"]
     assert infer_group("Unclassified observation") == []

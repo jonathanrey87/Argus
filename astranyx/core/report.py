@@ -17,18 +17,17 @@ class Report:
 
     def summary(self):
         counts = Counter(f.category for f in self.findings)
-
-        high = sum(1 for f in self.findings if f.confidence >= 80)
-        medium = sum(1 for f in self.findings if 40 <= f.confidence < 80)
-        low = sum(1 for f in self.findings if f.confidence < 40)
+        severity_counts = Counter(f.severity.casefold() for f in self.findings)
 
         return {
             "generated": self.generated,
             "target": self.target,
             "total": len(self.findings),
-            "high": high,
-            "medium": medium,
-            "low": low,
+            "critical": severity_counts["critical"],
+            "high": severity_counts["high"],
+            "medium": severity_counts["medium"],
+            "low": severity_counts["low"],
+            "info": severity_counts["info"],
             "categories": dict(counts),
         }
 

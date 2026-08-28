@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Astranyx Security Report</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <h1>ASTRANYX SECURITY REPORT</h1>
+  <p>DIVA Android Security Assessment</p>
+  <p><strong>Target:</strong> jakhar.aseem.diva</p>
+  <p><strong>Generated:</strong> 2026-08-28 02:32:09</p>
+</div>
+
+<div class="container">
+
+<div class="panel report-section">
+  <h2>Executive Summary</h2>
+  <p>Astranyx evaluated 42 normalized, evidence-backed findings. High-severity issues should be addressed before release. Scanner output should be independently validated before a security or compliance decision is made.</p>
+</div>
+
+<div class="grid report-section">
+  <div class="panel">
+    <h2>Assessment Information</h2>
+    <table class="metadata-table"><tbody><tr><th>Application</th><td>Diva</td></tr><tr><th>Package / Bundle ID</th><td>jakhar.aseem.diva</td></tr><tr><th>Artifact type</th><td>apk</td></tr><tr><th>Client</th><td>Demonstration Client</td></tr><tr><th>Consultant</th><td>Astranyx Security</td></tr><tr><th>Evidence source</th><td>mobsf</td></tr></tbody></table>
+  </div>
+  <div class="panel">
+    <h2>Methodology and Limitations</h2>
+    <p>This report normalizes evidence produced by configured Astranyx analyzers
+    and imported security tools. Findings are prioritized using available
+    severity, confidence, source, and location evidence.</p>
+    <p>This is not proof that the application is vulnerability-free. Runtime
+    behavior, authenticated workflows, backend services, and controls not
+    represented in the supplied evidence may remain untested.</p>
+  </div>
+</div>
+
+<div class="risk-card">
+  <h2>Overall Risk</h2>
+  <div class="risk-score">100 / 100</div>
+  <div class="risk-rating">Critical</div>
+  <pre class="risk-bar">████████████████████</pre>
+</div>
+
+<div class="cards">
+  <div class="card"><div class="label">Critical</div><div class="value critical-text">0</div></div>
+  <div class="card"><div class="label">High</div><div class="value high-text">18</div></div>
+  <div class="card"><div class="label">Medium</div><div class="value medium-text">16</div></div>
+  <div class="card"><div class="label">Low</div><div class="value low-text">0</div></div>
+  <div class="card"><div class="label">Informational</div><div class="value score">8</div></div>
+</div>
+
+<div class="panel report-section">
+  <h2>Assessment Metrics</h2>
+  <p><strong>Total findings:</strong> 42 &nbsp;|&nbsp;
+  <strong>Confidence score:</strong> 70/100 &nbsp;|&nbsp;
+  <strong>Categories:</strong> 17</p>
+</div>
+
+<div class="panel">
+  <h2>Attack Surface</h2>
+  <table class="surface-table">
+    <thead><tr><th>Component</th><th>Total</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="panel">
+  <h2>Findings</h2>
+
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="Search findings..." onkeyup="filterRows()">
+    <label><input type="checkbox" class="bandFilter" value="high" checked onchange="filterRows()"> High</label>
+    <label><input type="checkbox" class="bandFilter" value="medium" checked onchange="filterRows()"> Medium</label>
+    <label><input type="checkbox" class="bandFilter" value="low" checked onchange="filterRows()"> Low</label>
+  </div>
+
+  <table id="findingsTable">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Severity</th>
+        <th>Confidence</th>
+        <th>Review State</th>
+        <th>Category</th>
+        <th>File</th>
+        <th>Line</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr class="finding-row medium" data-band="medium" data-category="Activity (jakhar.aseem.diva.APICreds2Activity) is not Protected. An intent-filter exists.">
+  <td><button class="toggle" onclick="toggleDetails(0)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Activity (jakhar.aseem.diva.APICreds2Activity) is not Protected. An intent-filter exists.</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.</td>
+</tr>
+<tr id="details-0" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>[&quot;Activity&quot;, &quot;jakhar.aseem.diva.APICreds2Activity&quot;]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-07f7d34d52b38eb292f406f3 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> exported_intent_filter_exists<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-PLATFORM |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App can be installed on a vulnerable unpatched Android version 4.0.3-4.0.4, [minSdk=15]">
+  <td><button class="toggle" onclick="toggleDetails(1)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App can be installed on a vulnerable unpatched Android version 4.0.3-4.0.4, [minSdk=15]</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won&#x27;t receive reasonable security updates from Google. Support an Android version =&gt; 10, API 29 to receive reasonable security updates.</td>
+</tr>
+<tr id="details-1" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>[&quot;4.0.3-4.0.4&quot;, &quot;15&quot;]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-27a4d5d5223848e004762aa6 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> vulnerable_os_version<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> Unmapped |
+      <strong>Mapping basis:</strong> unmapped</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won&#x27;t receive reasonable security updates from Google. Support an Android version =&gt; 10, API 29 to receive reasonable security updates.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Content Provider (jakhar.aseem.diva.NotesProvider) is not Protected. [android:exported=true]">
+  <td><button class="toggle" onclick="toggleDetails(2)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Content Provider (jakhar.aseem.diva.NotesProvider) is not Protected. [android:exported=true]</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>A Content Provider is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.</td>
+</tr>
+<tr id="details-2" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>[&quot;Content Provider&quot;, &quot;jakhar.aseem.diva.NotesProvider&quot;]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-2d804c9d202172797209bcd7 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> explicitly_exported<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-PLATFORM |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>A Content Provider is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed by static manifest inspection: the content provider is exported without a protecting permission.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Application Data can be Backed up [android:allowBackup=true]">
+  <td><button class="toggle" onclick="toggleDetails(3)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Application Data can be Backed up [android:allowBackup=true]</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device.</td>
+</tr>
+<tr id="details-3" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Application Data can be Backed up [android:allowBackup=true]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-3f9a16fbb8f64bef6e3db94d |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> app_allowbackup<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed by static manifest inspection: android:allowBackup is enabled.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Activity (jakhar.aseem.diva.APICredsActivity) is not Protected. An intent-filter exists.">
+  <td><button class="toggle" onclick="toggleDetails(4)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Activity (jakhar.aseem.diva.APICredsActivity) is not Protected. An intent-filter exists.</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.</td>
+</tr>
+<tr id="details-4" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>[&quot;Activity&quot;, &quot;jakhar.aseem.diva.APICredsActivity&quot;]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-64ba39f2472bcf32d54e9be9 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> exported_intent_filter_exists<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-PLATFORM |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Debug Enabled For App [android:debuggable=true]">
+  <td><button class="toggle" onclick="toggleDetails(5)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Debug Enabled For App [android:debuggable=true]</td>
+  <td class="file">AndroidManifest.xml</td>
+  <td>1</td>
+  <td>Debugging was enabled on the app which makes it easier for reverse engineers to hook a debugger to it. This allows dumping a stack trace and accessing debugging helper classes.</td>
+</tr>
+<tr id="details-5" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Debug Enabled For App [android:debuggable=true]</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-ee61071f957448179b570eeb |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> app_is_debuggable<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>Debugging was enabled on the app which makes it easier for reverse engineers to hook a debugger to it. This allows dumping a stack trace and accessing debugging helper classes.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed from the packaged manifest: the analyzed debug build is debuggable.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(6)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/AccessControl1Activity.java</td>
+  <td>26</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-6" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-37081489feccd3f82850c665 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(7)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/AccessControl2Activity.java</td>
+  <td>30</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-7" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-7c7dceff32d87978b2950dad |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Debug configuration enabled. Production builds must not be debuggable.">
+  <td><button class="toggle" onclick="toggleDetails(8)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>Debug configuration enabled. Production builds must not be debuggable.</td>
+  <td class="file">jakhar/aseem/diva/BuildConfig.java</td>
+  <td>4</td>
+  <td>Debug configuration enabled. Production builds must not be debuggable.</td>
+</tr>
+<tr id="details-8" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Debug configuration enabled. Production builds must not be debuggable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-faf068fb77a2420fd04d6cbb |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_aar_jar_debug_enabled<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>Debug configuration enabled. Production builds must not be debuggable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.">
+  <td><button class="toggle" onclick="toggleDetails(9)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage2Activity.java</td>
+  <td>3</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+</tr>
+<tr id="details-9" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-dbdbd0e1c4443239db97be96 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_sql_raw_query<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(10)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage2Activity.java</td>
+  <td>23</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-10" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-8fd625ed885eb6e9b0a91792 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App creates temp file. Sensitive information should never be written into a temp file.">
+  <td><button class="toggle" onclick="toggleDetails(11)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App creates temp file. Sensitive information should never be written into a temp file.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage3Activity.java</td>
+  <td>26</td>
+  <td>App creates temp file. Sensitive information should never be written into a temp file.</td>
+</tr>
+<tr id="details-11" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>App creates temp file. Sensitive information should never be written into a temp file.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-0931e3514033de63d102c5b0 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_temp_file<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> Unmapped |
+      <strong>Mapping basis:</strong> unmapped</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>App creates temp file. Sensitive information should never be written into a temp file.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(12)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage3Activity.java</td>
+  <td>35</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-12" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-48409ea0a9c40c577aa42d51 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App can read/write to External Storage. Any App can read data written to External Storage.">
+  <td><button class="toggle" onclick="toggleDetails(13)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App can read/write to External Storage. Any App can read data written to External Storage.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage4Activity.java</td>
+  <td>25</td>
+  <td>App can read/write to External Storage. Any App can read data written to External Storage.</td>
+</tr>
+<tr id="details-13" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>App can read/write to External Storage. Any App can read data written to External Storage.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-d35e1b96478a0e842ebb350e |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_read_write_external<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>App can read/write to External Storage. Any App can read data written to External Storage.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(14)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/InsecureDataStorage4Activity.java</td>
+  <td>36</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-14" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e08963f5d88cfba7351143b1 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(15)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/LogActivity.java</td>
+  <td>24</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-15" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-6a41233f616841c6056ac0b4 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.">
+  <td><button class="toggle" onclick="toggleDetails(16)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+  <td class="file">jakhar/aseem/diva/NotesProvider.java</td>
+  <td>10</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+</tr>
+<tr id="details-16" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-d3123db19e4ac1973ff68edb |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_sql_raw_query<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.">
+  <td><button class="toggle" onclick="toggleDetails(17)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+  <td class="file">jakhar/aseem/diva/SQLInjectionActivity.java</td>
+  <td>4</td>
+  <td>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</td>
+</tr>
+<tr id="details-17" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-f510d3fab3104a20c0155e32 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_sql_raw_query<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="The App logs information. Sensitive information should never be logged.">
+  <td><button class="toggle" onclick="toggleDetails(18)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+  <td class="file">jakhar/aseem/diva/SQLInjectionActivity.java</td>
+  <td>28</td>
+  <td>The App logs information. Sensitive information should never be logged.</td>
+</tr>
+<tr id="details-18" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The App logs information. Sensitive information should never be logged.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e148c4df97eeeeefb7bd29aa |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> android_logging<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-STORAGE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The App logs information. Sensitive information should never be logged.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(19)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/arm64-v8a/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-19" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-091be4ba23fac2428992cc49 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(20)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/arm64-v8a/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-20" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-3f3f28a805471dcb6bae32de |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(21)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/arm64-v8a/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-21" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-dcd9d831cc83b127c7a67381 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(22)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/armeabi-v7a/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-22" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-7ac7274f6084992e65cd91d0 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(23)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/armeabi-v7a/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-23" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e54ac587b44d31e7a622d47f |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(24)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/armeabi-v7a/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-24" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e7d92c5b21bef88fef78ab9d |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(25)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/armeabi/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-25" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-052f95c6189ec9ecc5b94c67 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(26)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/armeabi/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-26" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-3882dd95fbd3a540805cd549 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(27)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/armeabi/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-27" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-a74ca98e1daf84a0f944232e |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(28)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/mips/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-28" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-59b3c9d0c9b90d81915683e8 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(29)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/mips/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-29" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-85b7a67c742c373ea61fa78f |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(30)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/mips/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-30" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-d1078560fa61c1fccbb4ec22 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(31)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/mips64/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-31" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-652c489e6ef6a3cd627a099a |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(32)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/mips64/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-32" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-94773aa936a8b33869e75bd4 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(33)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/mips64/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-33" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e81fbaa32ba0b5c8d5a8b1fd |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(34)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/x86/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-34" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-e93e1c73e1e22201b6e619b0 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(35)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/x86/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-35" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-f3c70e5f3b0b95dd4b7b16bc |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_nx">
+  <td><button class="toggle" onclick="toggleDetails(36)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_nx</td>
+  <td class="file">lib/x86_64/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</td>
+</tr>
+<tr id="details-36" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-25e21623ac21a8bba11e5487 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_nx<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-CODE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_fortify">
+  <td><button class="toggle" onclick="toggleDetails(37)">▶</button></td>
+  <td>Medium</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_fortify</td>
+  <td class="file">lib/x86_64/libdivajni.so</td>
+  <td>1</td>
+  <td>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</td>
+</tr>
+<tr id="details-37" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-440d92b068ec97e32053d928 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_fortify<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc&#x27;s commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="binary_stack_canary">
+  <td><button class="toggle" onclick="toggleDetails(38)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>binary_stack_canary</td>
+  <td class="file">lib/x86_64/libdivajni.so</td>
+  <td>1</td>
+  <td>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</td>
+</tr>
+<tr id="details-38" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-49e89c981b217848c05366eb |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> binary_stack_canary<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Application signed with debug certificate">
+  <td><button class="toggle" onclick="toggleDetails(39)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Confirmed</td>
+  <td>Application signed with debug certificate</td>
+  <td class="file">signing-certificate</td>
+  <td>1</td>
+  <td>Application signed with a debug certificate. Production application must not be shipped with a debug certificate.</td>
+</tr>
+<tr id="details-39" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Application signed with debug certificate</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-0105aa55ac47aeda18aa1a01 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> certificate_b0d9fb2297c7<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>Application signed with a debug certificate. Production application must not be shipped with a debug certificate.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Confirmed</p>
+      <p>Confirmed from the APK signing-certificate analysis; this training build uses a debug certificate.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Application vulnerable to Janus Vulnerability">
+  <td><button class="toggle" onclick="toggleDetails(40)">▶</button></td>
+  <td>High</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>Application vulnerable to Janus Vulnerability</td>
+  <td class="file">signing-certificate</td>
+  <td>1</td>
+  <td>Application is signed with v1 signature scheme, making it vulnerable to Janus vulnerability on Android 5.0-8.0, if signed only with v1 signature scheme. Applications running on Android 5.0-7.0 signed with v1, and v2/v3 scheme is also vulnerable.</td>
+</tr>
+<tr id="details-40" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Application vulnerable to Janus Vulnerability</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-096dda1a14c4efbc5faf0135 |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> certificate_033faa4c2ea1<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>Application is signed with v1 signature scheme, making it vulnerable to Janus vulnerability on Android 5.0-8.0, if signed only with v1 signature scheme. Applications running on Android 5.0-7.0 signed with v1, and v2/v3 scheme is also vulnerable.</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+
+<tr class="finding-row medium" data-band="medium" data-category="Signed Application">
+  <td><button class="toggle" onclick="toggleDetails(41)">▶</button></td>
+  <td>Info</td>
+  <td><span class="badge medium">70%</span></td>
+  <td>Needs Validation</td>
+  <td>Signed Application</td>
+  <td class="file">signing-certificate</td>
+  <td>1</td>
+  <td>Application is signed with a code signing certificate</td>
+</tr>
+<tr id="details-41" class="details">
+  <td colspan="8">
+    <div class="details-box">
+      <h4>Source Preview</h4>
+      <div class="source-preview"><em>No source preview available.</em></div>
+
+      <h4>Evidence</h4>
+      <pre>Signed Application</pre>
+
+      <h4>Classification</h4>
+      <p>
+        <strong>ID:</strong> asx-12ac2a4d62b64ce52b26e96a |
+        <strong>Source:</strong> mobsf |
+        <strong>Rule:</strong> certificate_b8cfd4104871<br>
+        <strong>CWE:</strong> N/A |
+        <strong>OWASP:</strong> N/A |
+        <strong>CVSS:</strong> N/A
+      </p>
+      <p><strong>OWASP MASVS:</strong> MASVS-RESILIENCE |
+      <strong>Mapping basis:</strong> inferred</p>
+
+      <h4>Recommendation</h4>
+      <p>Review this code path manually.</p>
+
+      <h4>Note</h4>
+      <p>Application is signed with a code signing certificate</p>
+
+      <h4>Tester Review</h4>
+      <p><strong>State:</strong> Needs Validation</p>
+      <p>No tester decision recorded.</p>
+    </div>
+  </td>
+</tr>
+</tbody>
+  </table>
+</div>
+
+<div class="footer">
+  Generated by Astranyx Threat Intelligence Automation Framework.
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>

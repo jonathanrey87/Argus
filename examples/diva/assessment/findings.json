@@ -1,0 +1,892 @@
+{
+  "schema_version": 1,
+  "metadata": {
+    "source": "mobsf",
+    "app_name": "Diva",
+    "package_name": "jakhar.aseem.diva",
+    "scan_type": "apk",
+    "normalized_findings": 42,
+    "imported_sections": [
+      "binary_analysis",
+      "certificate_analysis",
+      "code_analysis",
+      "manifest_analysis",
+      "network_security"
+    ],
+    "unsupported_sections": [
+      "permissions",
+      "secrets",
+      "trackers"
+    ],
+    "client": "Demonstration Client",
+    "consultant": "Astranyx Security",
+    "assessment_title": "DIVA Android Security Assessment"
+  },
+  "summary": {
+    "generated": "2026-08-28 02:32:09",
+    "target": "jakhar.aseem.diva",
+    "total": 42,
+    "critical": 0,
+    "high": 18,
+    "medium": 16,
+    "low": 0,
+    "info": 8,
+    "categories": {
+      "Application signed with debug certificate": 1,
+      "binary_fortify": 7,
+      "Activity (jakhar.aseem.diva.APICreds2Activity) is not Protected. An intent-filter exists.": 1,
+      "binary_stack_canary": 6,
+      "App creates temp file. Sensitive information should never be written into a temp file.": 1,
+      "Application vulnerable to Janus Vulnerability": 1,
+      "Signed Application": 1,
+      "binary_nx": 7,
+      "App can be installed on a vulnerable unpatched Android version 4.0.3-4.0.4, [minSdk=15]": 1,
+      "Content Provider (jakhar.aseem.diva.NotesProvider) is not Protected. [android:exported=true]": 1,
+      "The App logs information. Sensitive information should never be logged.": 7,
+      "Application Data can be Backed up [android:allowBackup=true]": 1,
+      "Activity (jakhar.aseem.diva.APICredsActivity) is not Protected. An intent-filter exists.": 1,
+      "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.": 3,
+      "App can read/write to External Storage. Any App can read data written to External Storage.": 1,
+      "Debug Enabled For App [android:debuggable=true]": 1,
+      "Debug configuration enabled. Production builds must not be debuggable.": 1
+    }
+  },
+  "findings": [
+    {
+      "category": "Application signed with debug certificate",
+      "severity": "High",
+      "file": "signing-certificate",
+      "full_path": "",
+      "line": 1,
+      "evidence": "Application signed with debug certificate",
+      "note": "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
+      "confidence": 70,
+      "reason": "Application signed with a debug certificate. Production application must not be shipped with a debug certificate.",
+      "source": "mobsf",
+      "rule_id": "certificate_b0d9fb2297c7",
+      "review_state": "confirmed",
+      "review_note": "Confirmed from the APK signing-certificate analysis; this training build uses a debug certificate.",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-0105aa55ac47aeda18aa1a01"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/armeabi/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-052f95c6189ec9ecc5b94c67"
+    },
+    {
+      "category": "Activity (jakhar.aseem.diva.APICreds2Activity) is not Protected. An intent-filter exists.",
+      "severity": "Medium",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "[\"Activity\", \"jakhar.aseem.diva.APICreds2Activity\"]",
+      "note": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.",
+      "confidence": 70,
+      "reason": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.",
+      "source": "mobsf",
+      "rule_id": "exported_intent_filter_exists",
+      "review_state": "confirmed",
+      "review_note": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+      "masvs": [
+        "MASVS-PLATFORM"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-07f7d34d52b38eb292f406f3"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/arm64-v8a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-091be4ba23fac2428992cc49"
+    },
+    {
+      "category": "App creates temp file. Sensitive information should never be written into a temp file.",
+      "severity": "Medium",
+      "file": "jakhar/aseem/diva/InsecureDataStorage3Activity.java",
+      "full_path": "",
+      "line": 26,
+      "evidence": "App creates temp file. Sensitive information should never be written into a temp file.",
+      "note": "App creates temp file. Sensitive information should never be written into a temp file.",
+      "confidence": 70,
+      "reason": "App creates temp file. Sensitive information should never be written into a temp file.",
+      "source": "mobsf",
+      "rule_id": "android_temp_file",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [],
+      "masvs_mapping": "unmapped",
+      "fingerprint": "asx-0931e3514033de63d102c5b0"
+    },
+    {
+      "category": "Application vulnerable to Janus Vulnerability",
+      "severity": "High",
+      "file": "signing-certificate",
+      "full_path": "",
+      "line": 1,
+      "evidence": "Application vulnerable to Janus Vulnerability",
+      "note": "Application is signed with v1 signature scheme, making it vulnerable to Janus vulnerability on Android 5.0-8.0, if signed only with v1 signature scheme. Applications running on Android 5.0-7.0 signed with v1, and v2/v3 scheme is also vulnerable.",
+      "confidence": 70,
+      "reason": "Application is signed with v1 signature scheme, making it vulnerable to Janus vulnerability on Android 5.0-8.0, if signed only with v1 signature scheme. Applications running on Android 5.0-7.0 signed with v1, and v2/v3 scheme is also vulnerable.",
+      "source": "mobsf",
+      "rule_id": "certificate_033faa4c2ea1",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-096dda1a14c4efbc5faf0135"
+    },
+    {
+      "category": "Signed Application",
+      "severity": "Info",
+      "file": "signing-certificate",
+      "full_path": "",
+      "line": 1,
+      "evidence": "Signed Application",
+      "note": "Application is signed with a code signing certificate",
+      "confidence": 70,
+      "reason": "Application is signed with a code signing certificate",
+      "source": "mobsf",
+      "rule_id": "certificate_b8cfd4104871",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-12ac2a4d62b64ce52b26e96a"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/x86_64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-25e21623ac21a8bba11e5487"
+    },
+    {
+      "category": "App can be installed on a vulnerable unpatched Android version 4.0.3-4.0.4, [minSdk=15]",
+      "severity": "High",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "[\"4.0.3-4.0.4\", \"15\"]",
+      "note": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+      "confidence": 70,
+      "reason": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates.",
+      "source": "mobsf",
+      "rule_id": "vulnerable_os_version",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [],
+      "masvs_mapping": "unmapped",
+      "fingerprint": "asx-27a4d5d5223848e004762aa6"
+    },
+    {
+      "category": "Content Provider (jakhar.aseem.diva.NotesProvider) is not Protected. [android:exported=true]",
+      "severity": "Medium",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "[\"Content Provider\", \"jakhar.aseem.diva.NotesProvider\"]",
+      "note": "A Content Provider is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
+      "confidence": 70,
+      "reason": "A Content Provider is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device.",
+      "source": "mobsf",
+      "rule_id": "explicitly_exported",
+      "review_state": "confirmed",
+      "review_note": "Confirmed by static manifest inspection: the content provider is exported without a protecting permission.",
+      "masvs": [
+        "MASVS-PLATFORM"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-2d804c9d202172797209bcd7"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/AccessControl1Activity.java",
+      "full_path": "",
+      "line": 26,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-37081489feccd3f82850c665"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/armeabi/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-3882dd95fbd3a540805cd549"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/arm64-v8a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-3f3f28a805471dcb6bae32de"
+    },
+    {
+      "category": "Application Data can be Backed up [android:allowBackup=true]",
+      "severity": "Medium",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "Application Data can be Backed up [android:allowBackup=true]",
+      "note": "This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device.",
+      "confidence": 70,
+      "reason": "This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device.",
+      "source": "mobsf",
+      "rule_id": "app_allowbackup",
+      "review_state": "confirmed",
+      "review_note": "Confirmed by static manifest inspection: android:allowBackup is enabled.",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-3f9a16fbb8f64bef6e3db94d"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/x86_64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-440d92b068ec97e32053d928"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/InsecureDataStorage3Activity.java",
+      "full_path": "",
+      "line": 35,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-48409ea0a9c40c577aa42d51"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/x86_64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-49e89c981b217848c05366eb"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/mips/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-59b3c9d0c9b90d81915683e8"
+    },
+    {
+      "category": "Activity (jakhar.aseem.diva.APICredsActivity) is not Protected. An intent-filter exists.",
+      "severity": "Medium",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "[\"Activity\", \"jakhar.aseem.diva.APICredsActivity\"]",
+      "note": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.",
+      "confidence": 70,
+      "reason": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported.",
+      "source": "mobsf",
+      "rule_id": "exported_intent_filter_exists",
+      "review_state": "confirmed",
+      "review_note": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+      "masvs": [
+        "MASVS-PLATFORM"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-64ba39f2472bcf32d54e9be9"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/mips64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-652c489e6ef6a3cd627a099a"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/LogActivity.java",
+      "full_path": "",
+      "line": 24,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-6a41233f616841c6056ac0b4"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/armeabi-v7a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-7ac7274f6084992e65cd91d0"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/AccessControl2Activity.java",
+      "full_path": "",
+      "line": 30,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-7c7dceff32d87978b2950dad"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/mips/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-85b7a67c742c373ea61fa78f"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+      "full_path": "",
+      "line": 23,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-8fd625ed885eb6e9b0a91792"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/mips64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-94773aa936a8b33869e75bd4"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/armeabi/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-a74ca98e1daf84a0f944232e"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/mips/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-d1078560fa61c1fccbb4ec22"
+    },
+    {
+      "category": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "severity": "Medium",
+      "file": "jakhar/aseem/diva/NotesProvider.java",
+      "full_path": "",
+      "line": 10,
+      "evidence": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "note": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "confidence": 70,
+      "reason": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "source": "mobsf",
+      "rule_id": "android_sql_raw_query",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-d3123db19e4ac1973ff68edb"
+    },
+    {
+      "category": "App can read/write to External Storage. Any App can read data written to External Storage.",
+      "severity": "Medium",
+      "file": "jakhar/aseem/diva/InsecureDataStorage4Activity.java",
+      "full_path": "",
+      "line": 25,
+      "evidence": "App can read/write to External Storage. Any App can read data written to External Storage.",
+      "note": "App can read/write to External Storage. Any App can read data written to External Storage.",
+      "confidence": 70,
+      "reason": "App can read/write to External Storage. Any App can read data written to External Storage.",
+      "source": "mobsf",
+      "rule_id": "android_read_write_external",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-d35e1b96478a0e842ebb350e"
+    },
+    {
+      "category": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "severity": "Medium",
+      "file": "jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+      "full_path": "",
+      "line": 3,
+      "evidence": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "note": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "confidence": 70,
+      "reason": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "source": "mobsf",
+      "rule_id": "android_sql_raw_query",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-dbdbd0e1c4443239db97be96"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/arm64-v8a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-dcd9d831cc83b127c7a67381"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/InsecureDataStorage4Activity.java",
+      "full_path": "",
+      "line": 36,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e08963f5d88cfba7351143b1"
+    },
+    {
+      "category": "The App logs information. Sensitive information should never be logged.",
+      "severity": "Info",
+      "file": "jakhar/aseem/diva/SQLInjectionActivity.java",
+      "full_path": "",
+      "line": 28,
+      "evidence": "The App logs information. Sensitive information should never be logged.",
+      "note": "The App logs information. Sensitive information should never be logged.",
+      "confidence": 70,
+      "reason": "The App logs information. Sensitive information should never be logged.",
+      "source": "mobsf",
+      "rule_id": "android_logging",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-STORAGE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e148c4df97eeeeefb7bd29aa"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/armeabi-v7a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e54ac587b44d31e7a622d47f"
+    },
+    {
+      "category": "binary_stack_canary",
+      "severity": "High",
+      "file": "lib/armeabi-v7a/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "note": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "confidence": 70,
+      "reason": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used.",
+      "source": "mobsf",
+      "rule_id": "binary_stack_canary",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e7d92c5b21bef88fef78ab9d"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/mips64/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e81fbaa32ba0b5c8d5a8b1fd"
+    },
+    {
+      "category": "binary_fortify",
+      "severity": "Medium",
+      "file": "lib/x86/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "note": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "confidence": 70,
+      "reason": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries.",
+      "source": "mobsf",
+      "rule_id": "binary_fortify",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-e93e1c73e1e22201b6e619b0"
+    },
+    {
+      "category": "Debug Enabled For App [android:debuggable=true]",
+      "severity": "High",
+      "file": "AndroidManifest.xml",
+      "full_path": "",
+      "line": 1,
+      "evidence": "Debug Enabled For App [android:debuggable=true]",
+      "note": "Debugging was enabled on the app which makes it easier for reverse engineers to hook a debugger to it. This allows dumping a stack trace and accessing debugging helper classes.",
+      "confidence": 70,
+      "reason": "Debugging was enabled on the app which makes it easier for reverse engineers to hook a debugger to it. This allows dumping a stack trace and accessing debugging helper classes.",
+      "source": "mobsf",
+      "rule_id": "app_is_debuggable",
+      "review_state": "confirmed",
+      "review_note": "Confirmed from the packaged manifest: the analyzed debug build is debuggable.",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-ee61071f957448179b570eeb"
+    },
+    {
+      "category": "binary_nx",
+      "severity": "High",
+      "file": "lib/x86/libdivajni.so",
+      "full_path": "",
+      "line": 1,
+      "evidence": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "note": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "confidence": 70,
+      "reason": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable.",
+      "source": "mobsf",
+      "rule_id": "binary_nx",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-f3c70e5f3b0b95dd4b7b16bc"
+    },
+    {
+      "category": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "severity": "Medium",
+      "file": "jakhar/aseem/diva/SQLInjectionActivity.java",
+      "full_path": "",
+      "line": 4,
+      "evidence": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "note": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "confidence": 70,
+      "reason": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database.",
+      "source": "mobsf",
+      "rule_id": "android_sql_raw_query",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-CODE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-f510d3fab3104a20c0155e32"
+    },
+    {
+      "category": "Debug configuration enabled. Production builds must not be debuggable.",
+      "severity": "High",
+      "file": "jakhar/aseem/diva/BuildConfig.java",
+      "full_path": "",
+      "line": 4,
+      "evidence": "Debug configuration enabled. Production builds must not be debuggable.",
+      "note": "Debug configuration enabled. Production builds must not be debuggable.",
+      "confidence": 70,
+      "reason": "Debug configuration enabled. Production builds must not be debuggable.",
+      "source": "mobsf",
+      "rule_id": "android_aar_jar_debug_enabled",
+      "review_state": "needs_validation",
+      "review_note": "",
+      "masvs": [
+        "MASVS-RESILIENCE"
+      ],
+      "masvs_mapping": "inferred",
+      "fingerprint": "asx-faf068fb77a2420fd04d6cbb"
+    }
+  ]
+}

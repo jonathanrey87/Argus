@@ -1,0 +1,1315 @@
+{
+  "version": "2.1.0",
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Astranyx",
+          "version": "4.0.0a2",
+          "informationUri": "https://github.com/jonathanrey87/Astranyx"
+        }
+      },
+      "results": [
+        {
+          "ruleId": "certificate_b0d9fb2297c7",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-0105aa55ac47aeda18aa1a01"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed from the APK signing-certificate analysis; this training build uses a debug certificate.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "Application signed with a debug certificate. Production application must not be shipped with a debug certificate."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "signing-certificate"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-052f95c6189ec9ecc5b94c67"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "exported_intent_filter_exists",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-07f7d34d52b38eb292f406f3"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-PLATFORM"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-091be4ba23fac2428992cc49"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/arm64-v8a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_temp_file",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-0931e3514033de63d102c5b0"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [],
+            "owaspMasvsMapping": "unmapped"
+          },
+          "level": "warning",
+          "message": {
+            "text": "App creates temp file. Sensitive information should never be written into a temp file."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage3Activity.java"
+                },
+                "region": {
+                  "startLine": 26
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "certificate_033faa4c2ea1",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-096dda1a14c4efbc5faf0135"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "Application is signed with v1 signature scheme, making it vulnerable to Janus vulnerability on Android 5.0-8.0, if signed only with v1 signature scheme. Applications running on Android 5.0-7.0 signed with v1, and v2/v3 scheme is also vulnerable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "signing-certificate"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "certificate_b8cfd4104871",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-12ac2a4d62b64ce52b26e96a"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "Application is signed with a code signing certificate"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "signing-certificate"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-25e21623ac21a8bba11e5487"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/x86_64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "vulnerable_os_version",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-27a4d5d5223848e004762aa6"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [],
+            "owaspMasvsMapping": "unmapped"
+          },
+          "level": "error",
+          "message": {
+            "text": "This application can be installed on an older version of android that has multiple unfixed vulnerabilities. These devices won't receive reasonable security updates from Google. Support an Android version => 10, API 29 to receive reasonable security updates."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "explicitly_exported",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-2d804c9d202172797209bcd7"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed by static manifest inspection: the content provider is exported without a protecting permission.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-PLATFORM"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "A Content Provider is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-37081489feccd3f82850c665"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/AccessControl1Activity.java"
+                },
+                "region": {
+                  "startLine": 26
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-3882dd95fbd3a540805cd549"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-3f3f28a805471dcb6bae32de"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/arm64-v8a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "app_allowbackup",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-3f9a16fbb8f64bef6e3db94d"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed by static manifest inspection: android:allowBackup is enabled.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "This flag allows anyone to backup your application data via adb. It allows users who have enabled USB debugging to copy application data off of the device."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-440d92b068ec97e32053d928"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/x86_64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-48409ea0a9c40c577aa42d51"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage3Activity.java"
+                },
+                "region": {
+                  "startLine": 35
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-49e89c981b217848c05366eb"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/x86_64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-59b3c9d0c9b90d81915683e8"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "exported_intent_filter_exists",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-64ba39f2472bcf32d54e9be9"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed by static manifest inspection: the activity has an intent filter and no protecting permission.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-PLATFORM"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "An Activity is found to be shared with other apps on the device therefore leaving it accessible to any other application on the device. The presence of intent-filter indicates that the Activity is explicitly exported."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-652c489e6ef6a3cd627a099a"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-6a41233f616841c6056ac0b4"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/LogActivity.java"
+                },
+                "region": {
+                  "startLine": 24
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-7ac7274f6084992e65cd91d0"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi-v7a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-7c7dceff32d87978b2950dad"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/AccessControl2Activity.java"
+                },
+                "region": {
+                  "startLine": 30
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-85b7a67c742c373ea61fa78f"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-8fd625ed885eb6e9b0a91792"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage2Activity.java"
+                },
+                "region": {
+                  "startLine": 23
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-94773aa936a8b33869e75bd4"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-a74ca98e1daf84a0f944232e"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-d1078560fa61c1fccbb4ec22"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_sql_raw_query",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-d3123db19e4ac1973ff68edb"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/NotesProvider.java"
+                },
+                "region": {
+                  "startLine": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_read_write_external",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-d35e1b96478a0e842ebb350e"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "App can read/write to External Storage. Any App can read data written to External Storage."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage4Activity.java"
+                },
+                "region": {
+                  "startLine": 25
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_sql_raw_query",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-dbdbd0e1c4443239db97be96"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage2Activity.java"
+                },
+                "region": {
+                  "startLine": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-dcd9d831cc83b127c7a67381"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/arm64-v8a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e08963f5d88cfba7351143b1"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/InsecureDataStorage4Activity.java"
+                },
+                "region": {
+                  "startLine": 36
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_logging",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e148c4df97eeeeefb7bd29aa"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-STORAGE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "note",
+          "message": {
+            "text": "The App logs information. Sensitive information should never be logged."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/SQLInjectionActivity.java"
+                },
+                "region": {
+                  "startLine": 28
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e54ac587b44d31e7a622d47f"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi-v7a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_stack_canary",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e7d92c5b21bef88fef78ab9d"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "This binary does not have a stack canary value added to the stack. Stack canaries are used to detect and prevent exploits from overwriting return address. Use the option -fstack-protector-all to enable stack canaries. Not applicable for Dart/Flutter libraries unless Dart FFI is used."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/armeabi-v7a/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e81fbaa32ba0b5c8d5a8b1fd"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/mips64/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_fortify",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-e93e1c73e1e22201b6e619b0"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "The binary does not have any fortified functions. Fortified functions provides buffer overflow checks against glibc's commons insecure functions like strcpy, gets etc. Use the compiler option -D_FORTIFY_SOURCE=2 to fortify functions. This check is not applicable for Dart/Flutter libraries."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/x86/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "app_is_debuggable",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-ee61071f957448179b570eeb"
+          },
+          "properties": {
+            "astranyxReviewState": "confirmed",
+            "astranyxReviewNote": "Confirmed from the packaged manifest: the analyzed debug build is debuggable.",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "Debugging was enabled on the app which makes it easier for reverse engineers to hook a debugger to it. This allows dumping a stack trace and accessing debugging helper classes."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "AndroidManifest.xml"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "binary_nx",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-f3c70e5f3b0b95dd4b7b16bc"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "The binary does not have NX bit set. NX bit offer protection against exploitation of memory corruption vulnerabilities by marking memory page as non-executable. Use option --noexecstack or -z noexecstack to mark stack as non executable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "lib/x86/libdivajni.so"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_sql_raw_query",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-f510d3fab3104a20c0155e32"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-CODE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "warning",
+          "message": {
+            "text": "App uses SQLite Database and execute raw SQL query. Untrusted user input in raw SQL queries can cause SQL Injection. Also sensitive information should be encrypted and written to the database."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/SQLInjectionActivity.java"
+                },
+                "region": {
+                  "startLine": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "android_aar_jar_debug_enabled",
+          "partialFingerprints": {
+            "astranyxFinding/v1": "asx-faf068fb77a2420fd04d6cbb"
+          },
+          "properties": {
+            "astranyxReviewState": "needs_validation",
+            "astranyxReviewNote": "",
+            "astranyxSource": "mobsf",
+            "owaspMasvs": [
+              "MASVS-RESILIENCE"
+            ],
+            "owaspMasvsMapping": "inferred"
+          },
+          "level": "error",
+          "message": {
+            "text": "Debug configuration enabled. Production builds must not be debuggable."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "jakhar/aseem/diva/BuildConfig.java"
+                },
+                "region": {
+                  "startLine": 4
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

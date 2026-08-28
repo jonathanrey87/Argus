@@ -14,7 +14,8 @@ GROUP_KEYWORDS = {
     "MASVS-NETWORK": (
         "network",
         "cleartext",
-        "certificate",
+        "certificate validation",
+        "tls certificate",
         "tls",
         "transport",
     ),
@@ -36,6 +37,8 @@ GROUP_KEYWORDS = {
         "tamper",
         "hook",
         "binary",
+        "signing",
+        "signature",
     ),
     "MASVS-PRIVACY": (
         "privacy",

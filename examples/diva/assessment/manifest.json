@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "artifacts": [
+    {
+      "path": "app.js",
+      "size_bytes": 792,
+      "sha256": "9aa663440f41650fbca1402b97090fce22034c1225227c10e2a571c1e7fa40dd"
+    },
+    {
+      "path": "findings.csv",
+      "size_bytes": 23092,
+      "sha256": "ebe04d53ccffa9d692836eafd257c68370ef3935e0b52ac30c297a31f26ad691"
+    },
+    {
+      "path": "findings.json",
+      "size_bytes": 49514,
+      "sha256": "554b968cdb5b532f7fa670ebf461146f37899b87520ea4f2ffc39adb48211fad"
+    },
+    {
+      "path": "findings.sarif",
+      "size_bytes": 45265,
+      "sha256": "0a365d125d57420b755157be843840a2017d7d3a7c0acf1b9201a8ad30eb7477"
+    },
+    {
+      "path": "index.html",
+      "size_bytes": 85073,
+      "sha256": "639a4a0e1d5da2ecfffd10804b14144c234fb96f26373fcfc2b065b83c6114a0"
+    },
+    {
+      "path": "reviews.template.json",
+      "size_bytes": 4638,
+      "sha256": "b413383cd266b2509f4c5cdf67fd3a45aa26874c94d05f108bc5ac5ede01fb18"
+    },
+    {
+      "path": "style.css",
+      "size_bytes": 3999,
+      "sha256": "b9a8c8b9375a9ee1df6f34024faf49b8106c8f99a152eb0a2ba23dc4630a2aea"
+    }
+  ]
+}

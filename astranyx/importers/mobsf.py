@@ -214,9 +214,19 @@ def _android_binary_findings(section: Any) -> list[Finding]:
     for binary in section:
         if not isinstance(binary, dict):
             continue
-        name = binary.get("name") or "native-binary"
+        # MobSF reports the same extracted library through both its original
+        # and apktool output paths. Canonicalizing that prefix lets the normal
+        # fingerprint de-duplication remove exact duplicate observations while
+        # retaining real per-ABI differences.
+        name = re.sub(r"^(?:apktool_out/)+", "", _text(binary.get("name")))
+        name = name or "native-binary"
         for check, entry in binary.items():
             if check == "name" or not isinstance(entry, dict):
+                continue
+            # Informational binary checks describe protections that are
+            # already present (PIE, RELRO, stripped symbols, no RPATH, etc.).
+            # They are useful scanner telemetry, but not actionable findings.
+            if _severity(entry.get("severity")) == "Info":
                 continue
             finding = _finding(
                 rule_id=f"binary_{check}",
