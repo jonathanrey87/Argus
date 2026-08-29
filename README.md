@@ -6,7 +6,7 @@
 
 Where signals emerge from the dark.
 
-`Version 4.0.0a2` · `Alpha` · `Python 3.11+`
+`Version 4.0.0a3` · `Alpha` · `Python 3.11+`
 
 </div>
 
@@ -114,7 +114,8 @@ carry the same identity in `partialFingerprints`.
 - Linux, macOS, or another Python-compatible environment
 - A virtual environment is recommended
 
-Runtime dependencies, including OpenTelemetry and Arize tracing support, are declared in `pyproject.toml` and installed automatically with Astranyx:
+The core engine has no third-party runtime dependencies. Optional iOS collection
+and telemetry integrations are available as extras:
 
 ```bash
 python -m venv venv
@@ -122,12 +123,14 @@ source venv/bin/activate
 
 python -m pip install --upgrade pip
 python -m pip install -e .
+# Optional: python -m pip install -e '.[ios]'
+# Optional: python -m pip install -e '.[telemetry]'
 ```
 
 For development and testing:
 
 ```bash
-python -m pip install pytest
+python -m pip install -e '.[dev]'
 ```
 
 ## Command-line interface

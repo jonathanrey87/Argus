@@ -81,9 +81,7 @@ def test_investigation_pipeline_generates_hashed_manifest(tmp_path):
     assert manifest["failures"] == []
     assert manifest["deduplication"]["artifact"] == "analysis/findings.json"
     assert manifest["deduplication"]["observations"] >= 1
-    assert manifest["evidence_graph"]["artifact"] == (
-        "analysis/evidence-graph.json"
-    )
+    assert manifest["evidence_graph"]["artifact"] == ("analysis/evidence-graph.json")
     assert manifest["evidence_graph"]["nodes"] >= 1
     assert manifest["dashboard"] == {
         "artifact": "html/index.html",

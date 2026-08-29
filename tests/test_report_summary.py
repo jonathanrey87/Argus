@@ -29,6 +29,6 @@ def test_summary_counts_severity_not_confidence():
 
     summary = report.summary()
 
-    assert {level: summary[level] for level in (
-        "critical", "high", "medium", "low", "info"
-    )} == {"critical": 1, "high": 1, "medium": 1, "low": 1, "info": 1}
+    assert {
+        level: summary[level] for level in ("critical", "high", "medium", "low", "info")
+    } == {"critical": 1, "high": 1, "medium": 1, "low": 1, "info": 1}

@@ -46,17 +46,24 @@ def _finding_rows(findings: list[dict]) -> str:
         if not isinstance(finding, dict):
             continue
         severity = _text(finding.get("severity"), "Info")
-        band = severity.casefold() if severity.casefold() in {
-            "critical",
-            "high",
-            "medium",
-            "low",
-            "info",
-        } else "info"
+        band = (
+            severity.casefold()
+            if severity.casefold()
+            in {
+                "critical",
+                "high",
+                "medium",
+                "low",
+                "info",
+            }
+            else "info"
+        )
         modules = finding.get("modules", [])
-        module_names = ", ".join(
-            item for item in modules if isinstance(item, str)
-        ) if isinstance(modules, list) else ""
+        module_names = (
+            ", ".join(item for item in modules if isinstance(item, str))
+            if isinstance(modules, list)
+            else ""
+        )
         searchable = " ".join(
             _text(finding.get(key))
             for key in ("fingerprint", "category", "file", "evidence")

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "astranyx-engine"
-version = "4.0.0a2"
+version = "4.0.0a3"
 description = "Astranyx Investigation Engine"
 readme = "README.md"
 license = "Apache-2.0"
@@ -35,6 +35,13 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+dev = [
+    "black==26.5.1",
+    "build==1.5.0",
+    "pytest==9.1.1",
+    "ruff==0.16.1",
+    "twine==6.2.0",
+]
 ios = ["pymobiledevice3"]
 telemetry = [
 	"arize-otel>=0.13.0,<0.14",
@@ -85,11 +92,11 @@ exclude = [
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py311", "py312", "py313"]
 
 [tool.ruff]
 line-length = 88
-target-version = "py313"
+target-version = "py311"
 required-version = "==0.16.1"
 
 [tool.pytest.ini_options]

@@ -27,6 +27,7 @@ def _identity(finding: dict[str, Any]) -> tuple[Any, ...]:
 
 def _preferred(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
     """Choose the richest, highest-severity observation as the canonical one."""
+
     def confidence(value: Any) -> int:
         try:
             return int(value or 0)

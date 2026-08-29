@@ -32,15 +32,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e .
-          pip install pytest==9.1.1 black==26.5.1 ruff==0.16.1
+          python -m pip install -e ".[dev]"
 
       - name: Ruff
         run: |
           ruff check astranyx tests
 
       - name: Black
-        run: black --check astranyx tests
+        run: |
+          find astranyx tests -name '*.py' -type f -print0 \
+            | xargs -0 -n 1 black --check --quiet
 
       - name: Tests
         run: |

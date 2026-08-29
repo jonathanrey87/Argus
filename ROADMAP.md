@@ -28,16 +28,16 @@
 - [x] JSON/CSV export
 
 ## v1.1
-- [ ] Source preview
-- [ ] CWE/OWASP mapping
+- [x] Source preview
+- [x] CWE/OWASP mapping
 - [ ] CVSS scoring
 
 ## v1.2
-- [ ] SARIF export
-- [ ] Unit tests
-- [ ] GitHub Actions
+- [x] SARIF export
+- [x] Unit tests
+- [x] GitHub Actions
 
 ## v2.0
 - [ ] Cross-file taint analysis
-- [ ] Call graph
-- [ ] Attack surface visualization
+- [x] Call graph foundation
+- [x] Attack surface summary

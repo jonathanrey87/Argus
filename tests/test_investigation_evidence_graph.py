@@ -35,8 +35,7 @@ def test_build_links_modules_findings_files_and_shared_evidence():
         "node_types": {"evidence": 1, "file": 2, "finding": 2, "module": 2},
     }
     assert {
-        (edge["source"], edge["target"], edge["type"])
-        for edge in graph["edges"]
+        (edge["source"], edge["target"], edge["type"]) for edge in graph["edges"]
     } >= {
         ("module:wordpress", "finding:asx-one", "reported"),
         ("module:javascript", "finding:asx-one", "reported"),

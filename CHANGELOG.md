@@ -1,12 +1,18 @@
 # Changelog
 
-## Unreleased
+## [4.0.0a3] - 2026-08-29
 
 - Added integrity-checked investigation resume with per-module checkpoints.
 - Added conservative cross-module deduplication for normalized findings.
 - Added a unified evidence graph linking analyzers, findings, files, and evidence.
 - Added a sealed, self-contained HTML dashboard for every investigation checkpoint.
 - Added a validated analyzer registry for extending investigation discovery and execution.
+- Added verified MobSF assessment bundles, fingerprint-bound tester reviews, and
+  OWASP MASVS mapping with provenance.
+- Added a read-only iOS evidence and retest foundation.
+- Made assessment telemetry private by default.
+- Fixed package builds with modern setuptools and included investigation dashboard
+  templates in wheels.
 
 ## [4.0.0a2] - 2026-08-12
 

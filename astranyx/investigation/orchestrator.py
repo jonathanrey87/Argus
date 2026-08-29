@@ -186,9 +186,7 @@ def _write_manifest(
             "observations": deduplication_summary["observations"],
             "unique_findings": deduplication_summary["unique_findings"],
             "duplicates_removed": deduplication_summary["duplicates_removed"],
-            "fingerprint_collisions": deduplication_summary[
-                "fingerprint_collisions"
-            ],
+            "fingerprint_collisions": deduplication_summary["fingerprint_collisions"],
         },
         "evidence_graph": {
             "artifact": graph_path.relative_to(workspace).as_posix(),
@@ -253,9 +251,7 @@ def _finish_pipeline(
 
     manager.load()
     manager.finish_with_status(status)
-    manifest_path = _write_manifest(
-        workspace, manager, module_results, failures
-    )
+    manifest_path = _write_manifest(workspace, manager, module_results, failures)
 
     print()
     print("[+] Investigation pipeline finished")
@@ -323,9 +319,7 @@ def run(
         manager.load()
         _write_manifest(workspace, manager, module_results, failures)
 
-    return _finish_pipeline(
-        workspace, manager, modules, module_results, failures
-    )
+    return _finish_pipeline(workspace, manager, modules, module_results, failures)
 
 
 def resume(
@@ -380,8 +374,7 @@ def resume(
         ]
         if mismatches:
             raise integrity.IntegrityError(
-                "manifest context does not match metadata: "
-                + ", ".join(mismatches)
+                "manifest context does not match metadata: " + ", ".join(mismatches)
             )
         module_results = dict(manifest.get("module_results") or {})
         failures = list(manifest.get("failures") or [])

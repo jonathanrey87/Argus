@@ -14,9 +14,12 @@ def _digest(value: str) -> str:
 
 def _finding_base_id(finding: dict[str, Any]) -> str:
     fingerprint = finding.get("fingerprint")
-    if isinstance(fingerprint, str) and fingerprint.startswith("asx-"):
-        if not finding.get("fingerprint_collision"):
-            return f"finding:{fingerprint}"
+    if (
+        isinstance(fingerprint, str)
+        and fingerprint.startswith("asx-")
+        and not finding.get("fingerprint_collision")
+    ):
+        return f"finding:{fingerprint}"
 
     identity = json.dumps(
         {
