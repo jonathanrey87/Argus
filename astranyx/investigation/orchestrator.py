@@ -10,6 +10,7 @@ from types import SimpleNamespace
 
 from astranyx.investigation import dashboard, deduplication, evidence_graph, integrity
 from astranyx.investigation.manager import InvestigationManager
+from astranyx.investigation.registry import Analyzer, AnalyzerContext, AnalyzerRegistry
 from astranyx.investigation.run import run as create_workspace
 from astranyx.modules import js
 from astranyx.wordpress import scanner
@@ -17,22 +18,41 @@ from astranyx.wordpress import scanner
 SUPPORTED_PROFILES = ("auto", "web", "javascript", "wordpress")
 
 
-def _contains(target: Path, pattern: str, recursive: bool) -> bool:
-    paths = target.rglob(pattern) if recursive else target.glob(pattern)
-    return next(paths, None) is not None
+def default_registry() -> AnalyzerRegistry:
+    """Return a fresh registry containing Astranyx's built-in analyzers."""
+    return AnalyzerRegistry(
+        (
+            Analyzer(
+                name="javascript",
+                profiles=("auto", "web", "javascript"),
+                patterns=("*.js",),
+                runner=lambda context: _run_javascript(
+                    context.target, context.workspace, context.recursive
+                ),
+            ),
+            Analyzer(
+                name="wordpress",
+                profiles=("auto", "web", "wordpress"),
+                patterns=("*.php",),
+                runner=lambda context: _run_wordpress(
+                    context.target,
+                    context.workspace,
+                    context.manager,
+                    context.recursive,
+                ),
+            ),
+        )
+    )
 
 
 def select_modules(
     target: str | Path,
     profile: str = "auto",
     recursive: bool = True,
+    analyzer_registry: AnalyzerRegistry | None = None,
 ) -> list[str]:
     """Select compatible analyzers for a local target and profile."""
     path = Path(target).expanduser().resolve()
-
-    if profile not in SUPPORTED_PROFILES:
-        choices = ", ".join(SUPPORTED_PROFILES)
-        raise ValueError(f"Unknown profile {profile!r}; choose one of: {choices}")
 
     if not path.exists():
         raise FileNotFoundError(path)
@@ -40,23 +60,12 @@ def select_modules(
     if not path.is_dir():
         raise NotADirectoryError(path)
 
-    has_javascript = _contains(path, "*.js", recursive)
-    has_php = _contains(path, "*.php", recursive)
-
-    if profile == "javascript":
-        modules = ["javascript"] if has_javascript else []
-    elif profile == "wordpress":
-        modules = ["wordpress"] if has_php else []
-    else:
-        modules = []
-        if has_javascript:
-            modules.append("javascript")
-        if has_php:
-            modules.append("wordpress")
+    registry = analyzer_registry or default_registry()
+    modules = registry.select(path, profile, recursive)
 
     if not modules:
         raise ValueError(
-            f"No analyzable JavaScript or PHP files found in {path} "
+            f"No analyzable files matched registered analyzers in {path} "
             f"for profile {profile!r}"
         )
 
@@ -214,12 +223,18 @@ def _run_module(
     workspace: Path,
     manager: InvestigationManager,
     recursive: bool,
+    analyzer_registry: AnalyzerRegistry,
 ) -> dict:
-    if module == "javascript":
-        return _run_javascript(target, workspace, recursive)
-    if module == "wordpress":
-        return _run_wordpress(target, workspace, manager, recursive)
-    raise ValueError(f"Unsupported investigation module: {module}")
+    before = len(manager.data.get("modules", []))
+    result = analyzer_registry.run(
+        module,
+        AnalyzerContext(target, workspace, manager, recursive),
+    )
+    manager.load()
+    recorded = manager.data.get("modules", [])[before:]
+    if not any(item.get("name") == module for item in recorded):
+        manager.add_module(module, details=result)
+    return result
 
 
 def _finish_pipeline(
@@ -266,10 +281,12 @@ def run(
     recursive: bool = True,
     trace_enabled: bool = False,
     workspace_root: str | Path = "investigations",
+    analyzer_registry: AnalyzerRegistry | None = None,
 ) -> dict:
     """Create a workspace, run selected analyzers, and seal a manifest."""
     target_path = Path(target).expanduser().resolve()
-    modules = select_modules(target_path, profile, recursive)
+    registry = analyzer_registry or default_registry()
+    modules = select_modules(target_path, profile, recursive, registry)
 
     workspace_args = SimpleNamespace(
         analyst=analyst,
@@ -290,7 +307,7 @@ def run(
     for module in modules:
         try:
             module_results[module] = _run_module(
-                module, target_path, workspace, manager, recursive
+                module, target_path, workspace, manager, recursive, registry
             )
         except Exception as exc:  # noqa: BLE001 - analyzer boundary isolation
             failure = _failure(module, exc)
@@ -311,22 +328,28 @@ def run(
     )
 
 
-def resume(workspace: str | Path, target: str | Path | None = None) -> dict:
+def resume(
+    workspace: str | Path,
+    target: str | Path | None = None,
+    *,
+    analyzer_registry: AnalyzerRegistry | None = None,
+) -> dict:
     """Resume unfinished or failed modules in an existing investigation."""
     root = Path(workspace).expanduser().resolve()
     manager = InvestigationManager(root)
     metadata = manager.data
+    registry = analyzer_registry or default_registry()
 
     modules = metadata.get("selected_modules")
     profile = metadata.get("profile")
     if (
         not isinstance(modules, list)
         or not modules
-        or profile not in SUPPORTED_PROFILES
+        or profile not in registry.profiles()
     ):
         raise ValueError("workspace has no valid investigation context")
-    if any(module not in {"javascript", "wordpress"} for module in modules):
-        raise ValueError("workspace contains unsupported selected modules")
+    if any(module not in registry.names() for module in modules):
+        raise ValueError("workspace contains unregistered selected analyzers")
 
     recorded_target = metadata.get("target")
     if not recorded_target:
@@ -376,7 +399,7 @@ def resume(workspace: str | Path, target: str | Path | None = None) -> dict:
     for module in pending:
         try:
             module_results[module] = _run_module(
-                module, target_path, root, manager, recursive
+                module, target_path, root, manager, recursive, registry
             )
         except Exception as exc:  # noqa: BLE001 - analyzer boundary isolation
             failure = _failure(module, exc)

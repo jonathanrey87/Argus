@@ -304,6 +304,12 @@ Every checkpoint includes a self-contained investigation dashboard at
 coverage, deduplication results, and searchable normalized findings without
 requiring a web server or external assets.
 
+Investigation analyzers are selected through a validated registry rather than
+hard-coded orchestration branches. Extensions declare a stable name, supported
+profiles, file discovery patterns, and a runner accepting `AnalyzerContext`.
+Passing a custom `AnalyzerRegistry` to the Python `run()` or `resume()` API keeps
+module failure isolation, metadata updates, checkpoints, and artifact sealing.
+
 Each analyzer completion also updates the sealed checkpoint. Resume a partial,
 failed, or interrupted investigation without repeating successful modules:
 

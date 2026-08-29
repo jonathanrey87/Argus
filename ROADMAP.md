@@ -11,7 +11,7 @@
 - [x] Cross-module finding deduplication
 - [x] Unified evidence graph
 - [x] Investigation dashboard
-- [ ] Pluggable analyzer registry
+- [x] Pluggable analyzer registry
 - [x] Baseline and retest finding comparison
 - [x] MobSF static-report import
 - [x] One-command verified mobile assessment workflow
