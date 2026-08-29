@@ -7,8 +7,8 @@
 - [x] Module failure isolation and terminal investigation states
 - [x] SHA-256 artifact manifest
 - [x] Optional tracing compatibility layer
-- [ ] Resume interrupted investigations
-- [ ] Cross-module finding deduplication
+- [x] Resume interrupted investigations
+- [x] Cross-module finding deduplication
 - [ ] Unified evidence graph
 - [ ] Investigation dashboard
 - [ ] Pluggable analyzer registry

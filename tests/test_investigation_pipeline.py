@@ -73,9 +73,12 @@ def test_investigation_pipeline_generates_hashed_manifest(tmp_path):
         "wordpress",
     ]
     assert (workspace / "analysis" / "javascript.json").is_file()
+    assert (workspace / "analysis" / "findings.json").is_file()
     assert (workspace / "reports" / "wordpress" / "index.html").is_file()
     assert manifest["investigation"]["status"] == "completed"
     assert manifest["failures"] == []
+    assert manifest["deduplication"]["artifact"] == "analysis/findings.json"
+    assert manifest["deduplication"]["observations"] >= 1
 
     for artifact in manifest["artifacts"]:
         artifact_path = workspace / artifact["path"]
@@ -153,3 +156,129 @@ def test_investigate_cli_runs_target_pipeline(
     assert metadata["selected_modules"] == ["javascript"]
     assert [module["name"] for module in metadata["modules"]] == ["javascript"]
     assert metadata["modules"][0]["status"] == "completed"
+
+
+def test_resume_retries_only_failed_modules(tmp_path, monkeypatch):
+    target = _write_web_target(tmp_path)
+    original_wordpress = orchestrator._run_wordpress
+    attempts = 0
+
+    def fail_once(*args, **kwargs):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise RuntimeError("interrupted analyzer")
+        return original_wordpress(*args, **kwargs)
+
+    monkeypatch.setattr(orchestrator, "_run_wordpress", fail_once)
+    initial = orchestrator.run(
+        target,
+        profile="web",
+        workspace_root=tmp_path / "investigations",
+    )
+    javascript_before = (
+        initial["workspace"] / "analysis" / "javascript.json"
+    ).read_bytes()
+
+    resumed = orchestrator.resume(initial["workspace"])
+
+    metadata = json.loads(
+        (initial["workspace"] / "metadata.json").read_text(encoding="utf-8")
+    )
+    assert resumed["status"] == "completed"
+    assert attempts == 2
+    assert resumed["failures"] == []
+    assert set(resumed["module_results"]) == {"javascript", "wordpress"}
+    assert (
+        initial["workspace"] / "analysis" / "javascript.json"
+    ).read_bytes() == javascript_before
+    assert metadata["resumes"][0]["prior_status"] == "partial"
+    assert metadata["resumes"][0]["modules"] == ["wordpress"]
+
+
+def test_resume_rejects_modified_completed_artifact(tmp_path, monkeypatch):
+    target = _write_web_target(tmp_path)
+
+    def fail_wordpress(*_args, **_kwargs):
+        raise RuntimeError("interrupted analyzer")
+
+    monkeypatch.setattr(orchestrator, "_run_wordpress", fail_wordpress)
+    initial = orchestrator.run(
+        target,
+        profile="web",
+        workspace_root=tmp_path / "investigations",
+    )
+    (initial["workspace"] / "analysis" / "javascript.json").write_text(
+        "tampered", encoding="utf-8"
+    )
+
+    with pytest.raises(
+        orchestrator.integrity.IntegrityError,
+        match="failed integrity verification",
+    ):
+        orchestrator.resume(initial["workspace"])
+
+
+def test_resume_rejects_completed_investigation(tmp_path):
+    target = _write_web_target(tmp_path)
+    initial = orchestrator.run(
+        target,
+        profile="javascript",
+        workspace_root=tmp_path / "investigations",
+    )
+
+    with pytest.raises(ValueError, match="already complete"):
+        orchestrator.resume(initial["workspace"])
+
+
+def test_resume_rejects_metadata_that_differs_from_seal(tmp_path, monkeypatch):
+    target = _write_web_target(tmp_path)
+    monkeypatch.setattr(
+        orchestrator,
+        "_run_wordpress",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(RuntimeError("stopped")),
+    )
+    initial = orchestrator.run(
+        target,
+        profile="web",
+        workspace_root=tmp_path / "investigations",
+    )
+    metadata_path = initial["workspace"] / "metadata.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    metadata["profile"] = "auto"
+    metadata_path.write_text(json.dumps(metadata), encoding="utf-8")
+
+    with pytest.raises(
+        orchestrator.integrity.IntegrityError,
+        match="context does not match metadata: profile",
+    ):
+        orchestrator.resume(initial["workspace"])
+
+
+def test_investigate_cli_resumes_workspace(tmp_path, monkeypatch):
+    target = _write_web_target(tmp_path)
+    original_wordpress = orchestrator._run_wordpress
+
+    monkeypatch.setattr(
+        orchestrator,
+        "_run_wordpress",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(RuntimeError("stopped")),
+    )
+    initial = orchestrator.run(
+        target,
+        profile="web",
+        workspace_root=tmp_path / "investigations",
+    )
+    monkeypatch.setattr(orchestrator, "_run_wordpress", original_wordpress)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["astranyx", "investigate", "--resume", str(initial["workspace"])],
+    )
+
+    main()
+
+    metadata = json.loads(
+        (initial["workspace"] / "metadata.json").read_text(encoding="utf-8")
+    )
+    assert metadata["status"] == "completed"

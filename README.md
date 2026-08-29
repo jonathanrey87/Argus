@@ -286,6 +286,26 @@ target, Astranyx runs each selected analyzer, isolates module failures, updates
 `metadata.json`, and writes `manifest.json` with SHA-256 hashes for every generated
 analysis and report artifact.
 
+Normalized findings from completed modules are combined in
+`analysis/findings.json`. Astranyx removes only observations that share both a
+stable fingerprint and matching security identity, records every contributing
+module, and retains the strongest severity and confidence evidence. Conflicting
+records that claim the same fingerprint are preserved and marked as collisions.
+JavaScript discovery signals are not promoted to vulnerabilities solely to make
+them eligible for deduplication.
+
+Each analyzer completion also updates the sealed checkpoint. Resume a partial,
+failed, or interrupted investigation without repeating successful modules:
+
+```bash
+astranyx investigate --resume investigations/INV-YYYYMMDD-HHMMSS
+```
+
+Astranyx verifies the existing artifact seal before resuming, retries only
+unfinished or failed modules, and records the resume in `metadata.json`. A
+different positional target may be supplied only when it resolves to the target
+already recorded by the workspace.
+
 Verify every sealed artifact before sharing or resuming an investigation:
 
 ```bash

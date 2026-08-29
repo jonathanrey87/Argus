@@ -33,6 +33,19 @@ class InvestigationManager:
         self.data["selected_modules"] = list(selected_modules)
         self.save()
 
+    def record_resume(self, prior_status, modules):
+        """Append an auditable record of a resumed pipeline run."""
+        self.data.setdefault("resumes", []).append(
+            {
+                "started": datetime.now(UTC).isoformat(),
+                "prior_status": prior_status,
+                "modules": list(modules),
+            }
+        )
+        self.data.pop("completed", None)
+        self.data["status"] = "active"
+        self.save()
+
     def set_artifacts(self, artifacts):
         """Replace the generated-artifact inventory."""
         self.data["artifacts"] = list(artifacts)

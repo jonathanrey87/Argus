@@ -8,6 +8,7 @@ from pathlib import Path
 from time import perf_counter
 from types import SimpleNamespace
 
+from astranyx.investigation import deduplication, integrity
 from astranyx.investigation.manager import InvestigationManager
 from astranyx.investigation.run import run as create_workspace
 from astranyx.modules import js
@@ -114,6 +115,7 @@ def _run_wordpress(
         "findings_total": report["findings_total"],
         "categories": report["categories"],
         "output_directory": str(output),
+        "finding_report": str(output / "findings.json"),
     }
 
 
@@ -141,6 +143,9 @@ def _write_manifest(
     module_results: dict,
     failures: list[dict],
 ) -> Path:
+    findings_path, deduplication_summary = deduplication.write(
+        workspace, module_results
+    )
     artifacts = _collect_artifacts(workspace)
     manager.set_artifacts(artifacts)
     manager.load()
@@ -158,6 +163,15 @@ def _write_manifest(
         },
         "module_results": module_results,
         "failures": failures,
+        "deduplication": {
+            "artifact": findings_path.relative_to(workspace).as_posix(),
+            "observations": deduplication_summary["observations"],
+            "unique_findings": deduplication_summary["unique_findings"],
+            "duplicates_removed": deduplication_summary["duplicates_removed"],
+            "fingerprint_collisions": deduplication_summary[
+                "fingerprint_collisions"
+            ],
+        },
         "artifacts": artifacts,
     }
 
@@ -167,6 +181,64 @@ def _write_manifest(
         encoding="utf-8",
     )
     return manifest_path
+
+
+def _failure(module: str, exc: Exception) -> dict:
+    return {
+        "module": module,
+        "error_type": type(exc).__name__,
+        "message": str(exc),
+    }
+
+
+def _run_module(
+    module: str,
+    target: Path,
+    workspace: Path,
+    manager: InvestigationManager,
+    recursive: bool,
+) -> dict:
+    if module == "javascript":
+        return _run_javascript(target, workspace, recursive)
+    if module == "wordpress":
+        return _run_wordpress(target, workspace, manager, recursive)
+    raise ValueError(f"Unsupported investigation module: {module}")
+
+
+def _finish_pipeline(
+    workspace: Path,
+    manager: InvestigationManager,
+    modules: list[str],
+    module_results: dict,
+    failures: list[dict],
+) -> dict:
+    if not failures:
+        status = "completed"
+    elif module_results:
+        status = "partial"
+    else:
+        status = "failed"
+
+    manager.load()
+    manager.finish_with_status(status)
+    manifest_path = _write_manifest(
+        workspace, manager, module_results, failures
+    )
+
+    print()
+    print("[+] Investigation pipeline finished")
+    print(f"    Status: {status}")
+    print(f"    Workspace: {workspace}")
+    print(f"    Manifest: {manifest_path}")
+
+    return {
+        "workspace": workspace,
+        "status": status,
+        "modules": modules,
+        "module_results": module_results,
+        "failures": failures,
+        "manifest": manifest_path,
+    }
 
 
 def run(
@@ -191,6 +263,8 @@ def run(
     workspace = create_workspace(workspace_args)
     manager = InvestigationManager(workspace)
     manager.set_context(profile, modules)
+    manager.data["recursive"] = recursive
+    manager.save()
     manager.set_status("active")
 
     module_results = {}
@@ -198,25 +272,11 @@ def run(
 
     for module in modules:
         try:
-            if module == "javascript":
-                module_results[module] = _run_javascript(
-                    target_path,
-                    workspace,
-                    recursive,
-                )
-            elif module == "wordpress":
-                module_results[module] = _run_wordpress(
-                    target_path,
-                    workspace,
-                    manager,
-                    recursive,
-                )
+            module_results[module] = _run_module(
+                module, target_path, workspace, manager, recursive
+            )
         except Exception as exc:  # noqa: BLE001 - analyzer boundary isolation
-            failure = {
-                "module": module,
-                "error_type": type(exc).__name__,
-                "message": str(exc),
-            }
+            failure = _failure(module, exc)
             failures.append(failure)
             manager.load()
             manager.add_module(
@@ -224,34 +284,89 @@ def run(
                 status="failed",
                 details={"error": failure},
             )
+        # Seal a checkpoint after every analyzer. A process interruption can
+        # therefore resume without re-running already completed work.
+        manager.load()
+        _write_manifest(workspace, manager, module_results, failures)
 
-    if not failures:
-        status = "completed"
-    elif module_results:
-        status = "partial"
-    else:
-        status = "failed"
-
-    manager.load()
-    manager.finish_with_status(status)
-    manifest_path = _write_manifest(
-        workspace,
-        manager,
-        module_results,
-        failures,
+    return _finish_pipeline(
+        workspace, manager, modules, module_results, failures
     )
 
-    print()
-    print("[+] Investigation pipeline finished")
-    print(f"    Status: {status}")
-    print(f"    Workspace: {workspace}")
-    print(f"    Manifest: {manifest_path}")
 
-    return {
-        "workspace": workspace,
-        "status": status,
-        "modules": modules,
-        "module_results": module_results,
-        "failures": failures,
-        "manifest": manifest_path,
-    }
+def resume(workspace: str | Path, target: str | Path | None = None) -> dict:
+    """Resume unfinished or failed modules in an existing investigation."""
+    root = Path(workspace).expanduser().resolve()
+    manager = InvestigationManager(root)
+    metadata = manager.data
+
+    modules = metadata.get("selected_modules")
+    profile = metadata.get("profile")
+    if (
+        not isinstance(modules, list)
+        or not modules
+        or profile not in SUPPORTED_PROFILES
+    ):
+        raise ValueError("workspace has no valid investigation context")
+    if any(module not in {"javascript", "wordpress"} for module in modules):
+        raise ValueError("workspace contains unsupported selected modules")
+
+    recorded_target = metadata.get("target")
+    if not recorded_target:
+        raise ValueError("workspace has no recorded target")
+    target_path = Path(target or recorded_target).expanduser().resolve()
+    recorded_target_path = Path(recorded_target).expanduser().resolve()
+    if target is not None and target_path != recorded_target_path:
+        raise ValueError("resume target does not match the workspace target")
+    if not target_path.is_dir():
+        raise NotADirectoryError(target_path)
+
+    manifest_path = root / "manifest.json"
+    module_results: dict = {}
+    failures: list[dict] = []
+    if manifest_path.exists():
+        verification = integrity.verify(root)
+        if not verification["valid"]:
+            raise integrity.IntegrityError(
+                "investigation artifacts failed integrity verification"
+            )
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        sealed_context = manifest.get("investigation", {})
+        context_fields = ("id", "target", "profile", "selected_modules")
+        mismatches = [
+            field
+            for field in context_fields
+            if sealed_context.get(field) != metadata.get(field)
+        ]
+        if mismatches:
+            raise integrity.IntegrityError(
+                "manifest context does not match metadata: "
+                + ", ".join(mismatches)
+            )
+        module_results = dict(manifest.get("module_results") or {})
+        failures = list(manifest.get("failures") or [])
+
+    completed = set(module_results)
+    pending = [module for module in modules if module not in completed]
+    if not pending:
+        raise ValueError("investigation is already complete")
+
+    prior_status = metadata.get("status", "unknown")
+    manager.record_resume(prior_status, pending)
+    recursive = bool(metadata.get("recursive", True))
+
+    failures = [item for item in failures if item.get("module") not in pending]
+    for module in pending:
+        try:
+            module_results[module] = _run_module(
+                module, target_path, root, manager, recursive
+            )
+        except Exception as exc:  # noqa: BLE001 - analyzer boundary isolation
+            failure = _failure(module, exc)
+            failures.append(failure)
+            manager.load()
+            manager.add_module(module, status="failed", details={"error": failure})
+        manager.load()
+        _write_manifest(root, manager, module_results, failures)
+
+    return _finish_pipeline(root, manager, modules, module_results, failures)

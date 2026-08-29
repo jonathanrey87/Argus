@@ -52,6 +52,18 @@ def run_investigation(args):
     target = positional_target or option_target
     args.target = target
 
+    resume_workspace = getattr(args, "resume", None)
+    if resume_workspace:
+        try:
+            return orchestrator.resume(resume_workspace, target=target)
+        except (
+            FileNotFoundError,
+            NotADirectoryError,
+            ValueError,
+            integrity.IntegrityError,
+        ) as exc:
+            raise SystemExit(f"[!] {exc}") from exc
+
     if target is None:
         return investigation_command.run(args)
 
@@ -401,6 +413,12 @@ def main():
         "--workspace-root",
         default="investigations",
         help="Parent directory for investigation workspaces",
+    )
+
+    investigation_parser.add_argument(
+        "--resume",
+        metavar="WORKSPACE",
+        help="Resume unfinished or failed modules in an existing workspace",
     )
 
     investigation_parser.set_defaults(

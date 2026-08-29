@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added integrity-checked investigation resume with per-module checkpoints.
+- Added conservative cross-module deduplication for normalized findings.
+
 ## [4.0.0a2] - 2026-08-12
 
 - Fixed successful JavaScript module records being overwritten during investigation finalization.
