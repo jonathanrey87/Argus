@@ -10,7 +10,7 @@
 - [x] Resume interrupted investigations
 - [x] Cross-module finding deduplication
 - [x] Unified evidence graph
-- [ ] Investigation dashboard
+- [x] Investigation dashboard
 - [ ] Pluggable analyzer registry
 - [x] Baseline and retest finding comparison
 - [x] MobSF static-report import

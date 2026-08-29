@@ -5,6 +5,7 @@
 - Added integrity-checked investigation resume with per-module checkpoints.
 - Added conservative cross-module deduplication for normalized findings.
 - Added a unified evidence graph linking analyzers, findings, files, and evidence.
+- Added a sealed, self-contained HTML dashboard for every investigation checkpoint.
 
 ## [4.0.0a2] - 2026-08-12
 

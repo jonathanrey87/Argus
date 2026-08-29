@@ -22,7 +22,6 @@ keywords = [
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: Apache Software License",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
@@ -82,6 +81,7 @@ exclude = [
     "templates/*.js"
 ]
 "astranyx" = ["schemas/*.json"]
+"astranyx.investigation" = ["templates/*.html"]
 
 [tool.black]
 line-length = 88

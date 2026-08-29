@@ -299,6 +299,11 @@ links each contributing analyzer to its findings, each finding to its source
 file, and supporting evidence to the findings it substantiates. Fingerprint
 collisions remain separate graph nodes, and shared evidence is represented once.
 
+Every checkpoint includes a self-contained investigation dashboard at
+`html/index.html`. It summarizes analyzer status, severity counts, evidence-graph
+coverage, deduplication results, and searchable normalized findings without
+requiring a web server or external assets.
+
 Each analyzer completion also updates the sealed checkpoint. Resume a partial,
 failed, or interrupted investigation without repeating successful modules:
 
