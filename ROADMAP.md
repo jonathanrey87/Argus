@@ -9,7 +9,7 @@
 - [x] Optional tracing compatibility layer
 - [x] Resume interrupted investigations
 - [x] Cross-module finding deduplication
-- [ ] Unified evidence graph
+- [x] Unified evidence graph
 - [ ] Investigation dashboard
 - [ ] Pluggable analyzer registry
 - [x] Baseline and retest finding comparison

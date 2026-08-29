@@ -74,11 +74,16 @@ def test_investigation_pipeline_generates_hashed_manifest(tmp_path):
     ]
     assert (workspace / "analysis" / "javascript.json").is_file()
     assert (workspace / "analysis" / "findings.json").is_file()
+    assert (workspace / "analysis" / "evidence-graph.json").is_file()
     assert (workspace / "reports" / "wordpress" / "index.html").is_file()
     assert manifest["investigation"]["status"] == "completed"
     assert manifest["failures"] == []
     assert manifest["deduplication"]["artifact"] == "analysis/findings.json"
     assert manifest["deduplication"]["observations"] >= 1
+    assert manifest["evidence_graph"]["artifact"] == (
+        "analysis/evidence-graph.json"
+    )
+    assert manifest["evidence_graph"]["nodes"] >= 1
 
     for artifact in manifest["artifacts"]:
         artifact_path = workspace / artifact["path"]

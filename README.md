@@ -294,6 +294,11 @@ records that claim the same fingerprint are preserved and marked as collisions.
 JavaScript discovery signals are not promoted to vulnerabilities solely to make
 them eligible for deduplication.
 
+Astranyx also writes `analysis/evidence-graph.json`, a deterministic graph that
+links each contributing analyzer to its findings, each finding to its source
+file, and supporting evidence to the findings it substantiates. Fingerprint
+collisions remain separate graph nodes, and shared evidence is represented once.
+
 Each analyzer completion also updates the sealed checkpoint. Resume a partial,
 failed, or interrupted investigation without repeating successful modules:
 

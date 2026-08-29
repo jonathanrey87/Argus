@@ -8,7 +8,7 @@ from pathlib import Path
 from time import perf_counter
 from types import SimpleNamespace
 
-from astranyx.investigation import deduplication, integrity
+from astranyx.investigation import deduplication, evidence_graph, integrity
 from astranyx.investigation.manager import InvestigationManager
 from astranyx.investigation.run import run as create_workspace
 from astranyx.modules import js
@@ -146,6 +146,7 @@ def _write_manifest(
     findings_path, deduplication_summary = deduplication.write(
         workspace, module_results
     )
+    graph_path, graph = evidence_graph.write(workspace, deduplication_summary)
     artifacts = _collect_artifacts(workspace)
     manager.set_artifacts(artifacts)
     manager.load()
@@ -171,6 +172,10 @@ def _write_manifest(
             "fingerprint_collisions": deduplication_summary[
                 "fingerprint_collisions"
             ],
+        },
+        "evidence_graph": {
+            "artifact": graph_path.relative_to(workspace).as_posix(),
+            **graph["summary"],
         },
         "artifacts": artifacts,
     }
