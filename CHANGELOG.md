@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.0a4] - 2026-09-01
+
+- Fixed private-by-default telemetry startup when OpenTelemetry is installed.
+- Added strict CVSS v3.1 base scoring with provenance, assessment coverage,
+  severity-disagreement visibility, and JSON/CSV/SARIF/dashboard integration.
+
 ## [4.0.0a3] - 2026-08-29
 
 - Added integrity-checked investigation resume with per-module checkpoints.

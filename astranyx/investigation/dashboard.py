@@ -76,13 +76,14 @@ def _finding_rows(findings: list[dict]) -> str:
             f'<td class="mono">{html.escape(_text(finding.get("file"), "n/a"))}</td>'
             f"<td>{html.escape(module_names or 'n/a')}</td>"
             f"<td>{html.escape(_text(finding.get('confidence'), 'n/a'))}</td>"
+            f"<td>{html.escape(_text(finding.get('cvss_score'), 'not assessed'))}</td>"
             "<td><details><summary>View</summary>"
             f'<p class="mono">{html.escape(_text(finding.get("fingerprint"), "Unfingerprinted"))}</p>'
-            f'<pre>{html.escape(_text(finding.get("evidence"), "No evidence supplied."))}</pre>'
+            f"<pre>{html.escape(_text(finding.get('evidence'), 'No evidence supplied.'))}</pre>"
             "</details></td></tr>"
         )
     return "".join(rows) or (
-        '<tr id="no-findings"><td colspan="6" class="empty">'
+        '<tr id="no-findings"><td colspan="7" class="empty">'
         "No normalized findings are currently available.</td></tr>"
     )
 

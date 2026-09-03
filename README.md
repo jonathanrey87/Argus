@@ -200,7 +200,8 @@ JSON file keyed by stable finding fingerprint:
   "reviews": {
     "asx-example": {
       "state": "confirmed",
-      "note": "Reproduced during authorized testing."
+      "note": "Reproduced during authorized testing.",
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
     }
   }
 }
@@ -219,6 +220,14 @@ Findings include OWASP MASVS v2.1 mappings. Exact controls supplied by upstream
 evidence are marked `upstream`; conservative keyword mappings identify only a
 broad control group and are marked `inferred`. Unmapped findings remain explicit
 rather than being assigned a fabricated compliance control.
+
+Confirmed findings may include a CVSS v3.1 base vector in the tester review.
+Astranyx validates every required metric, calculates the score and qualitative
+rating, records manual provenance, and exports the result to JSON, CSV, SARIF,
+and both dashboards. Missing vectors remain explicitly unassessed. Report
+summaries show scoring coverage and count disagreements between analyzer
+severity and CVSS so a tester can resolve them instead of silently trusting
+either source.
 
 ### Import a MobSF mobile assessment
 

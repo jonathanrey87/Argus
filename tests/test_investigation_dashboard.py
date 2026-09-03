@@ -23,6 +23,7 @@ def test_dashboard_renders_checkpoint_data_and_escapes_findings(tmp_path):
                     "fingerprint": "asx-test",
                     "severity": "High",
                     "confidence": 91,
+                    "cvss_score": 9.8,
                     "category": "<script>alert(1)</script>",
                     "file": "plugin.php",
                     "evidence": "request($url)",
@@ -41,6 +42,8 @@ def test_dashboard_renders_checkpoint_data_and_escapes_findings(tmp_path):
     assert '<span class="status completed">completed</span>' in page
     assert '<span class="status failed">failed</span>' in page
     assert "Self-contained offline dashboard" in page
+    assert "CVSS 3.1" in page
+    assert "9.8" in page
 
 
 def test_dashboard_handles_empty_findings(tmp_path):

@@ -130,6 +130,11 @@ def render_finding_rows(findings):
     for i, finding in enumerate(findings):
         band = confidence_band(finding.confidence)
         mapping = get_mapping(finding.category)
+        cvss = (
+            f"{finding.cvss_score:.1f} {finding.cvss_severity}"
+            if finding.cvss_score is not None
+            else "Not assessed"
+        )
         preview_html = render_source_preview(finding)
 
         rows += f"""
@@ -159,7 +164,9 @@ def render_finding_rows(findings):
         <strong>Rule:</strong> {html.escape(finding.rule_id or "n/a")}<br>
         <strong>CWE:</strong> {html.escape(mapping["cwe"])} |
         <strong>OWASP:</strong> {html.escape(mapping["owasp"])} |
-        <strong>CVSS:</strong> {html.escape(mapping["cvss"])}
+        <strong>CVSS v3.1:</strong> {html.escape(cvss)} |
+        <strong>Provenance:</strong> {html.escape(finding.cvss_source)}<br>
+        <strong>Vector:</strong> {html.escape(finding.cvss_vector or "Not supplied")}
       </p>
       <p><strong>OWASP MASVS:</strong> {html.escape(", ".join(finding.masvs) or "Unmapped")} |
       <strong>Mapping basis:</strong> {html.escape(finding.masvs_mapping)}</p>
@@ -200,6 +207,10 @@ def write_csv(findings, output_dir):
                 "review_note",
                 "masvs",
                 "masvs_mapping",
+                "cvss_vector",
+                "cvss_score",
+                "cvss_severity",
+                "cvss_source",
                 "category",
                 "file",
                 "line",
@@ -220,6 +231,10 @@ def write_csv(findings, output_dir):
                         item.review_note,
                         ";".join(item.masvs),
                         item.masvs_mapping,
+                        item.cvss_vector,
+                        item.cvss_score,
+                        item.cvss_severity,
+                        item.cvss_source,
                         item.category,
                         item.file,
                         item.line,

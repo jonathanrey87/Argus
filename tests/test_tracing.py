@@ -1,4 +1,4 @@
-from astranyx.telemetry import Status, StatusCode, _PrivacySafeSpan
+from astranyx.telemetry import Status, StatusCode, _PrivacySafeSpan, trace
 from astranyx.tracing import configure_tracing
 
 
@@ -16,6 +16,15 @@ class RecordingSpan:
 
     def record_exception(self, exception):
         self.exceptions.append(exception)
+
+
+def test_default_tracer_is_noop_when_opentelemetry_is_installed():
+    trace.disable()
+
+    tracer = trace.get_tracer("astranyx.test")
+    with tracer.start_as_current_span("private-by-default") as span:
+        span.set_attribute("astranyx.command", "test")
+        span.set_status(Status(StatusCode.OK))
 
 
 def test_tracing_disabled_without_credentials(

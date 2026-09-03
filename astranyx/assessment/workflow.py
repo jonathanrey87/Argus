@@ -9,6 +9,7 @@ from typing import Any
 from astranyx.core.finding import REVIEW_STATES
 from astranyx.importers import mobsf
 from astranyx.investigation import integrity
+from astranyx.scoring.cvss import CVSSVectorError
 
 MAX_REVIEW_BYTES = 5 * 1024 * 1024
 
@@ -45,6 +46,7 @@ def _load_reviews(path: str | Path | None) -> dict[str, dict[str, str]]:
             raise AssessmentError(f"invalid review decision for {fingerprint}")
         state = decision.get("state")
         note = decision.get("note", "")
+        cvss_vector = decision.get("cvss_vector", "")
         if state not in REVIEW_STATES:
             choices = ", ".join(sorted(REVIEW_STATES))
             raise AssessmentError(
@@ -52,7 +54,13 @@ def _load_reviews(path: str | Path | None) -> dict[str, dict[str, str]]:
             )
         if not isinstance(note, str):
             raise AssessmentError(f"invalid review note for {fingerprint}")
-        normalized[fingerprint] = {"state": state, "note": note[:4_000]}
+        if not isinstance(cvss_vector, str):
+            raise AssessmentError(f"invalid CVSS vector for {fingerprint}")
+        normalized[fingerprint] = {
+            "state": state,
+            "note": note[:4_000],
+            "cvss_vector": cvss_vector,
+        }
     return normalized
 
 
@@ -65,6 +73,13 @@ def _apply_reviews(findings: list[Any], reviews: dict[str, dict[str, str]]) -> N
         finding = by_fingerprint[fingerprint]
         finding.review_state = decision["state"]
         finding.review_note = decision["note"]
+        if decision["cvss_vector"]:
+            try:
+                finding.assess_cvss(decision["cvss_vector"], source="manual")
+            except CVSSVectorError as exc:
+                raise AssessmentError(
+                    f"invalid CVSS vector for {fingerprint}: {exc}"
+                ) from exc
 
 
 def _state_counts(findings: list[Any]) -> dict[str, int]:
@@ -106,5 +121,8 @@ def run(
     return {
         **result,
         "review_states": _state_counts(findings),
+        "cvss_assessed": sum(
+            1 for finding in findings if finding.cvss_score is not None
+        ),
         "integrity_verified": True,
     }

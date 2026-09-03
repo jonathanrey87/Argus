@@ -40,6 +40,7 @@ def test_assess_defaults_to_needs_validation_and_verifies_bundle(tmp_path):
     template = json.loads((output / "reviews.template.json").read_text())
     fingerprint = report["findings"][0]["fingerprint"]
     assert template["reviews"][fingerprint] == {
+        "cvss_vector": "",
         "note": "",
         "state": "needs_validation",
     }
@@ -60,6 +61,7 @@ def test_assess_applies_fingerprint_review_decisions(tmp_path):
                     fingerprint: {
                         "state": "confirmed",
                         "note": "Reproduced during authorized testing.",
+                        "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
                     }
                 },
             }
@@ -72,6 +74,9 @@ def test_assess_applies_fingerprint_review_decisions(tmp_path):
     assert result["review_states"]["confirmed"] == 1
     assert report["findings"][0]["review_state"] == "confirmed"
     assert "Reproduced" in report["findings"][0]["review_note"]
+    assert report["findings"][0]["cvss_score"] == 9.8
+    assert report["findings"][0]["cvss_source"] == "manual"
+    assert result["cvss_assessed"] == 1
     assert "Confirmed" in (output / "index.html").read_text()
 
 

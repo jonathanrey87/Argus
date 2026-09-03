@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import PurePath
 
 from astranyx.mobile.masvs import infer_group
+from astranyx.scoring.cvss import assess
 
 FINGERPRINT_VERSION = 1
 REVIEW_STATES = {
@@ -17,6 +18,7 @@ REVIEW_STATES = {
     "not_tested",
     "rejected",
 }
+CVSS_SOURCES = {"analyzer", "manual", "not_assessed", "upstream"}
 
 
 def fingerprint(category: str, file: str, evidence: str) -> str:
@@ -54,6 +56,10 @@ class Finding:
     review_note: str = ""
     masvs: list[str] = field(default_factory=list)
     masvs_mapping: str = "unmapped"
+    cvss_vector: str = ""
+    cvss_score: float | None = None
+    cvss_severity: str | None = None
+    cvss_source: str = "not_assessed"
     fingerprint: str = field(init=False)
 
     def __post_init__(self):
@@ -63,3 +69,27 @@ class Finding:
             self.masvs = infer_group(self.rule_id, self.category, self.reason)
             if self.masvs:
                 self.masvs_mapping = "inferred"
+        if self.cvss_source not in CVSS_SOURCES:
+            raise ValueError(f"invalid CVSS source: {self.cvss_source}")
+        if self.cvss_vector:
+            if self.cvss_source == "not_assessed":
+                raise ValueError("a CVSS vector requires explicit provenance")
+            result = assess(self.cvss_vector)
+            self.cvss_vector = result.vector
+            self.cvss_score = result.score
+            self.cvss_severity = result.severity
+        elif self.cvss_source != "not_assessed":
+            raise ValueError("CVSS provenance requires a vector")
+        else:
+            self.cvss_score = None
+            self.cvss_severity = None
+
+    def assess_cvss(self, vector: str, source: str = "manual") -> None:
+        """Attach a validated score without inferring any missing metric."""
+        if source not in CVSS_SOURCES - {"not_assessed"}:
+            raise ValueError(f"invalid CVSS source: {source}")
+        result = assess(vector)
+        self.cvss_vector = result.vector
+        self.cvss_score = result.score
+        self.cvss_severity = result.severity
+        self.cvss_source = source

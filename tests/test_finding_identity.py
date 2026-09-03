@@ -2,6 +2,8 @@ import json
 from dataclasses import replace
 from importlib.resources import files
 
+import pytest
+
 from astranyx.core.finding import fingerprint
 from astranyx.core.report import Report
 from astranyx.wordpress.scanner import Finding
@@ -55,3 +57,20 @@ def test_report_declares_schema_and_fingerprint():
     assert payload["metadata"] == {}
     assert payload["findings"][0]["fingerprint"].startswith("asx-")
     assert schema["properties"]["schema_version"]["const"] == 1
+
+
+def test_finding_records_validated_cvss_with_provenance():
+    finding = make_finding()
+    finding.assess_cvss(
+        "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        source="manual",
+    )
+
+    assert finding.cvss_score == 9.8
+    assert finding.cvss_severity == "Critical"
+    assert finding.cvss_source == "manual"
+
+
+def test_finding_rejects_vector_without_provenance():
+    with pytest.raises(ValueError, match="explicit provenance"):
+        make_finding(cvss_vector="CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H")

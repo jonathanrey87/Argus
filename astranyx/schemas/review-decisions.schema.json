@@ -19,7 +19,11 @@
                 "not_tested", "rejected"
               ]
             },
-            "note": {"type": "string", "maxLength": 4000}
+            "note": {"type": "string", "maxLength": 4000},
+            "cvss_vector": {
+              "type": "string",
+              "pattern": "^(?:CVSS:3\\.1/AV:[NALP]/AC:[LH]/PR:[NLH]/UI:[NR]/S:[UC]/C:[HLN]/I:[HLN]/A:[HLN])?$"
+            }
           },
           "additionalProperties": false
         }

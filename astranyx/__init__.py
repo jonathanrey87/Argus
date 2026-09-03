@@ -1,8 +1,3 @@
-from importlib.metadata import PackageNotFoundError, version
-
-try:
-    __version__ = version("astranyx-engine")
-except PackageNotFoundError:
-    __version__ = "unknown"
+from astranyx._version import __version__
 
 __all__ = ["__version__"]

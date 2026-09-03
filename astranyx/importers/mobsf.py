@@ -400,6 +400,7 @@ def write_report(
                 finding.fingerprint: {
                     "state": finding.review_state,
                     "note": finding.review_note,
+                    "cvss_vector": finding.cvss_vector,
                 }
                 for finding in sorted(findings, key=lambda item: item.fingerprint)
             },

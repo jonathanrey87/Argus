@@ -19,6 +19,13 @@ class Report:
         counts = Counter(f.category for f in self.findings)
         severity_counts = Counter(f.severity.casefold() for f in self.findings)
 
+        assessed = [f for f in self.findings if f.cvss_score is not None]
+        mismatches = [
+            f
+            for f in assessed
+            if f.cvss_severity != "None"
+            and f.cvss_severity.casefold() != f.severity.casefold()
+        ]
         return {
             "generated": self.generated,
             "target": self.target,
@@ -28,6 +35,10 @@ class Report:
             "medium": severity_counts["medium"],
             "low": severity_counts["low"],
             "info": severity_counts["info"],
+            "cvss_assessed": len(assessed),
+            "cvss_unassessed": len(self.findings) - len(assessed),
+            "cvss_highest": max((f.cvss_score for f in assessed), default=None),
+            "cvss_severity_mismatches": len(mismatches),
             "categories": dict(counts),
         }
 

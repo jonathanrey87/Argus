@@ -33,25 +33,32 @@ except ImportError:
             self.status_code = status_code
             self.description = description
 
-    class _NoOpSpan:
-        def set_attribute(self, _name: str, _value: Any) -> None:
-            return None
 
-        def set_status(self, _status: Status) -> None:
-            return None
+class _NoOpSpan:
+    """Span used while telemetry is disabled, regardless of installed extras."""
 
-        def record_exception(self, _exception: BaseException) -> None:
-            return None
+    def set_attribute(self, _name: str, _value: Any) -> None:
+        return None
 
-    class _NoOpTracer:
-        def start_as_current_span(self, _name: str):
-            return nullcontext(_NoOpSpan())
+    def set_status(self, _status: Status) -> None:
+        return None
 
-    class _NoOpTrace:
-        @staticmethod
-        def get_tracer(_name: str) -> _NoOpTracer:
-            return _NoOpTracer()
+    def record_exception(self, _exception: BaseException) -> None:
+        return None
 
+
+class _NoOpTracer:
+    def start_as_current_span(self, _name: str):
+        return nullcontext(_NoOpSpan())
+
+
+class _NoOpTrace:
+    @staticmethod
+    def get_tracer(_name: str) -> _NoOpTracer:
+        return _NoOpTracer()
+
+
+if "_backend_trace" not in globals():
     _backend_trace = _NoOpTrace()
 
 

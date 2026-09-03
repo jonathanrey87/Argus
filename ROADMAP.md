@@ -30,7 +30,7 @@
 ## v1.1
 - [x] Source preview
 - [x] CWE/OWASP mapping
-- [ ] CVSS scoring
+- [x] Evidence-backed CVSS v3.1 scoring and provenance
 
 ## v1.2
 - [x] SARIF export
