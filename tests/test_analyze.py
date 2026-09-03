@@ -175,7 +175,6 @@ def test_analyze_extracts_api_methods_without_ui_route_confusion(tmp_path):
     report = analyze(tmp_path)
 
     assert [
-        (endpoint["method"], endpoint["path"])
-        for endpoint in report["api_endpoints"]
+        (endpoint["method"], endpoint["path"]) for endpoint in report["api_endpoints"]
     ] == [("POST", "/public/admin/recover")]
     assert report["report_guidance"].startswith("Signals are review candidates")

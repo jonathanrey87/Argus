@@ -36,7 +36,13 @@ def test_cli_authorize_allows_in_scope(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["astranyx", "engagement", "authorize", str(policy), "https://admin.example.test/"],
+        [
+            "astranyx",
+            "engagement",
+            "authorize",
+            str(policy),
+            "https://admin.example.test/",
+        ],
     )
     main()
     result = json.loads(capsys.readouterr().out)
@@ -49,7 +55,13 @@ def test_cli_authorize_denies_out_of_scope(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         sys,
         "argv",
-        ["astranyx", "engagement", "authorize", str(policy), "https://outside.example/"],
+        [
+            "astranyx",
+            "engagement",
+            "authorize",
+            str(policy),
+            "https://outside.example/",
+        ],
     )
     with pytest.raises(SystemExit) as exc_info:
         main()

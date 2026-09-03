@@ -102,7 +102,11 @@ def test_concurrent_appends_preserve_one_valid_chain(tmp_path, monkeypatch):
 
     monkeypatch.setattr(ledger, "verify", synchronized_initial_verify)
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        list(pool.map(lambda index: ledger.append("event", {"index": index}), range(workers)))
+        list(
+            pool.map(
+                lambda index: ledger.append("event", {"index": index}), range(workers)
+            )
+        )
 
     result = original_verify()
     assert result.valid
@@ -115,7 +119,9 @@ def test_cross_process_appends_preserve_chain(tmp_path):
     records_per_worker = 20
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures = [
-            pool.submit(append_many, path, worker * records_per_worker, records_per_worker)
+            pool.submit(
+                append_many, path, worker * records_per_worker, records_per_worker
+            )
             for worker in range(workers)
         ]
         assert [future.result(timeout=10) for future in futures] == [20] * workers

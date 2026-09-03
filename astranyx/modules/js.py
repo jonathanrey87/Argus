@@ -32,7 +32,9 @@ SIGNAL_PATTERNS = {
         r"\b(?:dangerouslySetInnerHTML|innerHTML|outerHTML|insertAdjacentHTML|document\.write)\b",
         re.IGNORECASE,
     ),
-    "cross_window_message": re.compile(r"\b(?:postMessage|MessageEvent)\b", re.IGNORECASE),
+    "cross_window_message": re.compile(
+        r"\b(?:postMessage|MessageEvent)\b", re.IGNORECASE
+    ),
     "browser_secret_storage": re.compile(
         r"(?:localStorage|sessionStorage)\.(?:getItem|setItem)\s*\([^)]*"
         r"(?:token|session|nonce|secret|password|codeVerifier)",
@@ -168,9 +170,7 @@ def _infer_http_method(text, endpoint_end):
     if match.group("literal"):
         return match.group("literal").upper()
     resolver = (match.group("resolver") or "").lower()
-    return {"post": "POST", "put": "PUT", "delete": "DELETE"}.get(
-        resolver, "GET"
-    )
+    return {"post": "POST", "put": "PUT", "delete": "DELETE"}.get(resolver, "GET")
 
 
 def _extract_api_endpoints(text, report_path):

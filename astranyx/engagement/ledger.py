@@ -76,7 +76,9 @@ def redact(value: Any, key: str = "") -> Any:
     if any(marker in normalized_key for marker in SENSITIVE_KEYS):
         return REDACTED
     if isinstance(value, dict):
-        return {str(item): redact(content, str(item)) for item, content in value.items()}
+        return {
+            str(item): redact(content, str(item)) for item, content in value.items()
+        }
     if isinstance(value, (list, tuple)):
         return [redact(item) for item in value]
     if isinstance(value, str) and key.casefold() in {"url", "location", "final_url"}:
@@ -211,14 +213,17 @@ class AuditLedger:
         return value
 
     def _write_head_locked(self, verification: VerificationResult) -> None:
-        payload = _canonical(
-            {
-                "schema_version": self.schema_version,
-                "engagement_id": self.engagement_id,
-                "records": verification.records,
-                "head_hash": verification.head_hash,
-            }
-        ) + b"\n"
+        payload = (
+            _canonical(
+                {
+                    "schema_version": self.schema_version,
+                    "engagement_id": self.engagement_id,
+                    "records": verification.records,
+                    "head_hash": verification.head_hash,
+                }
+            )
+            + b"\n"
+        )
         temporary = self._head_path.with_name(
             f"{self._head_path.name}.tmp-{os.getpid()}-{secrets.token_hex(8)}"
         )
@@ -257,14 +262,20 @@ class AuditLedger:
                 return VerificationResult(False, count, previous, "invalid JSON record")
             digest = record.pop("hash", None)
             if record.get("index") != expected_index:
-                return VerificationResult(False, count, previous, "non-sequential index")
+                return VerificationResult(
+                    False, count, previous, "non-sequential index"
+                )
             if record.get("previous_hash") != previous:
-                return VerificationResult(False, count, previous, "hash-chain discontinuity")
+                return VerificationResult(
+                    False, count, previous, "hash-chain discontinuity"
+                )
             if record.get("engagement_id") != self.engagement_id:
                 return VerificationResult(False, count, previous, "engagement mismatch")
             calculated = _hash(record)
             if digest != calculated:
-                return VerificationResult(False, count, previous, "record hash mismatch")
+                return VerificationResult(
+                    False, count, previous, "record hash mismatch"
+                )
             previous = calculated
             count += 1
         if checkpoint is None:
@@ -303,9 +314,7 @@ class AuditLedger:
             raise LedgerError("event must be a bounded lowercase identifier")
         with self._thread_lock, self._exclusive_lock():
             content = self._read_locked()
-            verification = self._verify_content(
-                content, self._read_head_locked()
-            )
+            verification = self._verify_content(content, self._read_head_locked())
             if not verification.valid:
                 raise LedgerError(verification.error)
             moment = (timestamp or datetime.now(UTC)).astimezone(UTC)
