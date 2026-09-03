@@ -1,5 +1,20 @@
 # Changelog
 
+## [4.0.0a5] - 2026-09-02
+
+- Added bounded cross-file taint analysis over the language-neutral IR.
+- Added conservative PHP IR extraction and WordPress integration with complete
+  source-to-sink file and line evidence.
+- Added explicit sanitizer barriers, deterministic ambiguity handling, and
+  traversal budgets to reduce false conclusions and path explosion.
+- Added versioned attack-surface graphs and bounded evidence-backed path
+  correlation for JavaScript and WordPress analysis.
+- Added fail-closed engagement policy enforcement, DNS rebinding defenses,
+  request throttling, and a tamper-evident audit ledger.
+- Added planning-only validation playbooks, approval-gated workflow state, and
+  redacted, integrity-checked evidence bundles.
+- Added signed third-party plugin manifests and fail-closed Linux isolation.
+
 ## [4.0.0a4] - 2026-09-01
 
 - Fixed private-by-default telemetry startup when OpenTelemetry is installed.

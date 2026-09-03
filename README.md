@@ -6,7 +6,7 @@
 
 Where signals emerge from the dark.
 
-`Version 4.0.0a3` · `Alpha` · `Python 3.11+`
+`Version 4.0.0a5` · `Alpha` · `Python 3.11+`
 
 </div>
 
@@ -178,6 +178,37 @@ python -m astranyx.cli wordpress ./path/to/plugin
 ```
 
 Only analyze plugins and code that you own or are authorized to assess.
+
+For PHP plugins, Astranyx also builds a conservative interprocedural model of
+explicit assignments, function arguments, returns, and security-sensitive
+sinks. Confirmed cross-file paths include every traversed file and line. The
+engine does not guess between ambiguous function names, limits traversal depth
+and path count, and treats only explicitly identified sanitizers as flow
+barriers. Cross-file results remain `needs_validation` until a tester reviews
+the complete path.
+
+### Correlate and validate attack paths
+
+Astranyx can correlate evidence-backed source-to-sink paths, turn them into
+non-executing validation plans, and manage an approval-gated validation
+workflow with sealed, redacted evidence:
+
+```bash
+astranyx graph correlate graph.json --output paths.json
+astranyx validation plan paths.json --output plans.json
+astranyx workflow create plans.json validation-workspace --actor analyst
+astranyx evidence verify evidence-bundle
+```
+
+Rules of engagement can be validated and queried without sending a request:
+
+```bash
+astranyx engagement validate engagement.json
+astranyx engagement authorize engagement.json https://example.test/path
+```
+
+Third-party plugins require a signed manifest and execute only through the
+fail-closed Linux isolation backend. Run `astranyx plugin doctor` before use.
 
 ### Run a complete assessment
 

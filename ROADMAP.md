@@ -38,6 +38,6 @@
 - [x] GitHub Actions
 
 ## v2.0
-- [ ] Cross-file taint analysis
+- [x] Bounded cross-file taint analysis with explainable paths
 - [x] Call graph foundation
 - [x] Attack surface summary

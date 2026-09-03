@@ -27,6 +27,7 @@ def test_default_pipeline_registers_evidence_gate():
 
     assert [stage.name for stage in pipeline.stages] == [
         "evidence_gate",
+        "attack_surface",
     ]
 
 
@@ -50,3 +51,9 @@ def test_default_pipeline_evaluates_findings():
 
     assert len(result["evidence_decisions"]) == 2
     assert result["reportable_findings"] == 1
+    assert result["attack_path_report"]["summary"] == {
+        "nodes": 0,
+        "edges": 0,
+        "attack_paths": 0,
+        "truncated": False,
+    }

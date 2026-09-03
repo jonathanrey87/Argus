@@ -42,9 +42,11 @@ def build_default_pipeline() -> AnalysisPipeline:
     The local import avoids a circular import because EvidenceGateStage
     inherits from AnalysisStage.
     """
+    from astranyx.analysis.attack_surface import AttackSurfaceStage
     from astranyx.analysis.evidence_gate import EvidenceGateStage
 
     pipeline = AnalysisPipeline()
     pipeline.register(EvidenceGateStage())
+    pipeline.register(AttackSurfaceStage())
 
     return pipeline

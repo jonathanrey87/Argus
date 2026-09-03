@@ -4,6 +4,7 @@ __pycache__/
 
 investigations/
 evidence/
+!astranyx/evidence/
 reports/
 
 /analysis/

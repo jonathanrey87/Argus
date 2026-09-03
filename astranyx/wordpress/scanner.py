@@ -1,10 +1,12 @@
 from collections import Counter
 from pathlib import Path
 
+from astranyx.analysis.interprocedural import CrossFileTaintEngine
 from astranyx.core.finding import Finding
 from astranyx.core.html import render
 from astranyx.core.report import Report
 from astranyx.core.sarif import export as export_sarif
+from astranyx.parsers.php import parse_file as parse_php
 from astranyx.wordpress.analyzer import analyze_finding
 from astranyx.wordpress.rules.registry import get_rules_for_file
 from astranyx.wordpress.taint import analyze as taint_analyze
@@ -94,6 +96,7 @@ def scan_plugin(plugin_path, recursive=True):
         raise FileNotFoundError(root)
 
     findings = []
+    php_files = []
 
     for ext in ("*.php", "*.js", "*.jsx", "*.ts", "*.tsx"):
         files = root.rglob(ext) if recursive else root.glob(ext)
@@ -102,6 +105,39 @@ def scan_plugin(plugin_path, recursive=True):
                 continue
 
             findings.extend(scan_file(file, root))
+            if file.suffix == ".php":
+                php_files.append(file)
+
+    modules = []
+    for file in php_files:
+        try:
+            modules.append(parse_php(file, root=root))
+        except OSError:
+            continue
+    for flow in CrossFileTaintEngine().analyze(modules):
+        if not flow.cross_file:
+            continue
+        sink_step = flow.path[-1]
+        path = " -> ".join(
+            f"{step.label} ({step.file}:{step.line})" for step in flow.path
+        )
+        findings.append(
+            Finding(
+                category="Cross-File Taint Flow",
+                severity="High",
+                file=sink_step.file,
+                full_path=str(root / sink_step.file),
+                line=sink_step.line,
+                evidence=path,
+                note="Validate the complete interprocedural path before reporting.",
+                confidence=90,
+                reason=(
+                    f"Untrusted {flow.source} reaches {flow.sink} across "
+                    f"{len(flow.files)} files."
+                ),
+                rule_id="php-cross-file-taint",
+            )
+        )
 
     return findings
 

@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -24,6 +25,38 @@ PATTERNS = {
 ROUTE_PATTERN = re.compile(
     r"""["'`]((?:https?://|/)[A-Za-z0-9._~:/?#@!$&()*+,;=%\-\[\]]+)["'`]"""
 )
+
+SIGNAL_PATTERNS = {
+    "dynamic_code_execution": re.compile(r"(?:\beval\s*\(|\bFunction\s*\()"),
+    "html_injection_sink": re.compile(
+        r"\b(?:dangerouslySetInnerHTML|innerHTML|outerHTML|insertAdjacentHTML|document\.write)\b",
+        re.IGNORECASE,
+    ),
+    "cross_window_message": re.compile(r"\b(?:postMessage|MessageEvent)\b", re.IGNORECASE),
+    "browser_secret_storage": re.compile(
+        r"(?:localStorage|sessionStorage)\.(?:getItem|setItem)\s*\([^)]*"
+        r"(?:token|session|nonce|secret|password|codeVerifier)",
+        re.IGNORECASE,
+    ),
+    "navigation_sink": re.compile(
+        r"(?:window\.)?location\.(?:assign|replace|href)|window\.open\s*\(",
+        re.IGNORECASE,
+    ),
+}
+
+API_ENDPOINT_PATTERN = re.compile(
+    r"\$\{[^}]+\}"
+    r"(?P<path>/(?:adminOIDC|admin|appearance|dataRetention|network|public|self|session)"
+    r"[A-Za-z0-9_?&=./${}:-]*)"
+)
+
+HTTP_RESOLVER_PATTERN = re.compile(
+    r"(?:method\s*:\s*[\"'](?P<literal>GET|POST|PUT|DELETE|PATCH)[\"']|"
+    r"getHttp(?P<resolver>Post|Put|Delete|PDF)?Resolver)",
+    re.IGNORECASE,
+)
+
+MAX_SIGNALS_PER_CATEGORY_PER_FILE = 25
 
 
 def _raise_analysis_error(span, error_type, message):
@@ -91,7 +124,80 @@ def _extract_findings(text):
     return findings
 
 
-def _scan_javascript_file(file_path):
+def _source_position(text, offset):
+    """Return one-based line and column values for an offset."""
+    line = text.count("\n", 0, offset) + 1
+    last_newline = text.rfind("\n", 0, offset)
+    column = offset + 1 if last_newline < 0 else offset - last_newline
+    return line, column
+
+
+def _snippet(text, start, end, radius=140):
+    """Build a compact evidence preview around a match."""
+    preview = text[max(0, start - radius) : min(len(text), end + radius)]
+    return re.sub(r"\s+", " ", preview).strip()
+
+
+def _extract_signals(text, report_path):
+    """Extract bounded, source-backed security signals."""
+    signals = []
+    for category, pattern in SIGNAL_PATTERNS.items():
+        for match in list(pattern.finditer(text))[:MAX_SIGNALS_PER_CATEGORY_PER_FILE]:
+            line, column = _source_position(text, match.start())
+            signals.append(
+                {
+                    "category": category,
+                    "file": report_path,
+                    "offset": match.start(),
+                    "line": line,
+                    "column": column,
+                    "match": match.group(0),
+                    "snippet": _snippet(text, match.start(), match.end()),
+                    "status": "candidate",
+                }
+            )
+    return signals
+
+
+def _infer_http_method(text, endpoint_end):
+    """Infer the request method from code immediately following an endpoint."""
+    nearby = text[endpoint_end : endpoint_end + 320]
+    match = HTTP_RESOLVER_PATTERN.search(nearby)
+    if not match:
+        return "UNKNOWN"
+    if match.group("literal"):
+        return match.group("literal").upper()
+    resolver = (match.group("resolver") or "").lower()
+    return {"post": "POST", "put": "PUT", "delete": "DELETE"}.get(
+        resolver, "GET"
+    )
+
+
+def _extract_api_endpoints(text, report_path):
+    """Extract first-party API paths with method hints and source evidence."""
+    endpoints = {}
+    for match in API_ENDPOINT_PATTERN.finditer(text):
+        path = match.group("path")
+        method = _infer_http_method(text, match.end())
+        if method == "UNKNOWN":
+            continue
+        key = (method, path)
+        if key in endpoints:
+            continue
+        line, column = _source_position(text, match.start("path"))
+        endpoints[key] = {
+            "method": method,
+            "path": path,
+            "file": report_path,
+            "offset": match.start("path"),
+            "line": line,
+            "column": column,
+            "snippet": _snippet(text, match.start(), match.end()),
+        }
+    return list(endpoints.values())
+
+
+def _scan_javascript_file(file_path, report_path):
     """Read and scan one JavaScript file."""
     text = file_path.read_text(
         encoding="utf-8",
@@ -100,8 +206,11 @@ def _scan_javascript_file(file_path):
 
     findings = _extract_findings(text)
     routes = ROUTE_PATTERN.findall(text)
+    signals = _extract_signals(text, report_path)
+    endpoints = _extract_api_endpoints(text, report_path)
+    digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
 
-    return text, findings, routes
+    return text, findings, routes, signals, endpoints, digest
 
 
 def _scan_javascript_files(js_files, base):
@@ -110,6 +219,9 @@ def _scan_javascript_files(js_files, base):
     routes = set()
     failed_files = 0
     total_findings = 0
+    signals = []
+    api_endpoints = []
+    source_files = []
 
     with tracer.start_as_current_span("astranyx.js.scan_files") as scan_span:
         for file_path in js_files:
@@ -125,7 +237,14 @@ def _scan_javascript_files(js_files, base):
                 )
 
                 try:
-                    text, findings, file_routes = _scan_javascript_file(file_path)
+                    (
+                        text,
+                        findings,
+                        file_routes,
+                        file_signals,
+                        file_endpoints,
+                        digest,
+                    ) = _scan_javascript_file(file_path, report_path)
                 except OSError as exc:
                     failed_files += 1
 
@@ -161,6 +280,15 @@ def _scan_javascript_files(js_files, base):
 
                 total_findings += finding_count
                 routes.update(file_routes)
+                signals.extend(file_signals)
+                api_endpoints.extend(file_endpoints)
+                source_files.append(
+                    {
+                        "path": report_path,
+                        "size_bytes": file_path.stat().st_size,
+                        "sha256": digest,
+                    }
+                )
 
                 if findings:
                     results[report_path] = findings
@@ -189,6 +317,9 @@ def _scan_javascript_files(js_files, base):
         routes,
         failed_files,
         total_findings,
+        signals,
+        api_endpoints,
+        source_files,
     )
 
 
@@ -198,6 +329,9 @@ def _build_report(
     failed_files,
     results,
     routes,
+    signals,
+    api_endpoints,
+    source_files,
 ):
     """Build the JavaScript analysis report."""
     return {
@@ -205,6 +339,15 @@ def _build_report(
         "files_analyzed": len(js_files) - failed_files,
         "summary": results,
         "routes": sorted(routes),
+        "signals": signals,
+        "api_endpoints": sorted(
+            api_endpoints, key=lambda item: (item["path"], item["method"])
+        ),
+        "source_files": source_files,
+        "report_guidance": (
+            "Signals are review candidates, not validated vulnerabilities. "
+            "Confirm attacker control, reachability, and security impact manually."
+        ),
     }
 
 
@@ -413,6 +556,9 @@ def analyze(path, output=None, investigation=None, recursive=False):
             routes,
             failed_files,
             total_findings,
+            signals,
+            api_endpoints,
+            source_files,
         ) = _scan_javascript_files(js_files, base)
 
         report = _build_report(
@@ -421,6 +567,9 @@ def analyze(path, output=None, investigation=None, recursive=False):
             failed_files,
             results,
             routes,
+            signals,
+            api_endpoints,
+            source_files,
         )
 
         result_json = json.dumps(

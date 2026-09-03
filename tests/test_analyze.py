@@ -141,3 +141,41 @@ def test_analyze_skips_unreadable_files(
     assert report["files_analyzed"] == 1
     assert "good.js" in report["summary"]
     assert "broken.js" not in report["summary"]
+
+
+def test_analyze_emits_hashed_source_backed_signals(tmp_path):
+    bundle = tmp_path / "app.js"
+    bundle.write_text(
+        'function safe() {}\nlocalStorage.setItem("sessionToken", token);\neval(input);',
+        encoding="utf-8",
+    )
+
+    report = analyze(tmp_path)
+
+    assert report["source_files"][0]["path"] == "app.js"
+    assert len(report["source_files"][0]["sha256"]) == 64
+    execution = [
+        signal
+        for signal in report["signals"]
+        if signal["category"] == "dynamic_code_execution"
+    ]
+    assert [signal["match"] for signal in execution] == ["eval("]
+    assert execution[0]["line"] == 3
+    assert execution[0]["status"] == "candidate"
+
+
+def test_analyze_extracts_api_methods_without_ui_route_confusion(tmp_path):
+    bundle = tmp_path / "app.js"
+    bundle.write_text(
+        'link="/network/profile";const endpoint=`${api}/public/admin/recover`;'
+        "return getHttpPostResolver(endpoint, {});",
+        encoding="utf-8",
+    )
+
+    report = analyze(tmp_path)
+
+    assert [
+        (endpoint["method"], endpoint["path"])
+        for endpoint in report["api_endpoints"]
+    ] == [("POST", "/public/admin/recover")]
+    assert report["report_guidance"].startswith("Signals are review candidates")
