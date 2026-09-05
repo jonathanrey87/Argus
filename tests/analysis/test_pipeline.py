@@ -26,6 +26,7 @@ def test_default_pipeline_registers_evidence_gate():
     pipeline = build_default_pipeline()
 
     assert [stage.name for stage in pipeline.stages] == [
+        "authorization_differential",
         "evidence_gate",
         "attack_surface",
     ]

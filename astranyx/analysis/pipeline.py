@@ -43,9 +43,11 @@ def build_default_pipeline() -> AnalysisPipeline:
     inherits from AnalysisStage.
     """
     from astranyx.analysis.attack_surface import AttackSurfaceStage
+    from astranyx.analysis.authorization import AuthorizationDifferentialStage
     from astranyx.analysis.evidence_gate import EvidenceGateStage
 
     pipeline = AnalysisPipeline()
+    pipeline.register(AuthorizationDifferentialStage())
     pipeline.register(EvidenceGateStage())
     pipeline.register(AttackSurfaceStage())
 

@@ -8,6 +8,7 @@ from astranyx.core.report import Report
 from astranyx.core.sarif import export as export_sarif
 from astranyx.parsers.php import parse_file as parse_php
 from astranyx.wordpress.analyzer import analyze_finding
+from astranyx.wordpress.authorization import analyze_plugin_authorization
 from astranyx.wordpress.rules.registry import get_rules_for_file
 from astranyx.wordpress.taint import analyze as taint_analyze
 
@@ -138,6 +139,9 @@ def scan_plugin(plugin_path, recursive=True):
                 rule_id="php-cross-file-taint",
             )
         )
+
+    authorization = analyze_plugin_authorization(root, recursive=recursive)
+    findings.extend(item.to_finding() for item in authorization.differentials)
 
     return findings
 

@@ -200,6 +200,13 @@ astranyx workflow create plans.json validation-workspace --actor analyst
 astranyx evidence verify evidence-bundle
 ```
 
+The default analysis pipeline also accepts explicit authorization policies and
+effective access paths. It reports a differential when an alternate route
+reaches the same asset operation without a required authentication,
+capability, role, ownership, tenant, or object-state control. Extractors must
+provide evidence that a control actually guards the operation; a nearby
+authorization-looking call is not treated as enforcement.
+
 Rules of engagement can be validated and queried without sending a request:
 
 ```bash

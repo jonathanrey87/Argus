@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Added evidence-backed authorization policy differential analysis for finding
+  alternate access paths that omit required authentication, capability, role,
+  ownership, tenant, or object-state controls.
+- Added conservative WordPress REST route extraction with resolved permission
+  and handler callback controls for authorization correlation.
+- Added concrete WordPress post-type resolution and policy inference from
+  explicit plugin authorization functions, with automatic scanner findings for
+  matching routes that omit required controls.
+
 ## [4.0.0a5] - 2026-09-02
 
 - Added bounded cross-file taint analysis over the language-neutral IR.
